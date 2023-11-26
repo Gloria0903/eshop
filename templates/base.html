@@ -1,0 +1,41 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}E Shopping{% endblock %}</title>
+    {% block styles %}
+    <!-- Add your CSS files here -->
+        <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    {% endblock %}
+</head>
+<body>
+    <div class="header">
+        <!-- Add your header content here -->
+    </div>
+    <div class="main">
+        {% block content %}
+        <!-- Add your main content here -->
+        {% endblock %}
+    </div>
+    <div class="footer">
+        <!-- Add your footer content here -->
+    </div>
+    {% block scripts %}
+    <!-- Add your JavaScript files here -->
+         <script src="{% static 'lib/easing/easing.min.js' %}"></script>
+    <script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script>
+
+    <!-- Contact Javascript File -->
+    <script src="{% static 'mail/jqBootstrapValidation.min.js' %}"></script>
+    <script src="{% static 'mail/contact.js' %}"></script>
+
+    <!-- Template Javascript -->
+    <script src="{% static 'js/main.js' %}"></script>
+    {% endblock %}
+</body>
+</html>

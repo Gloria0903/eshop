@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Customer Registration{% endblock %}
+{% block styles %}
+
+<!-- Add your CSS files here -->
+     <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block main.content %}
+    <div class="container">
+       <div class="row my-3">
+           <div class="col-sm-6 offset-sm-3">
+               <h3>Customer Registration</h3>
+               <hr>
+
+               <form action="/customerregistration"method="POST" novalidate class="shadow p-5">
+                   {% csrf_token %}
+                   {{ form.as_p }}
+                   {% for fm in form %}
+                      {{ fm.label_tag }}  {{ fm }}  <small class="text-danger">{{ fm.errors }}</small>
+                      <br>
+                   {% endfor %}
+               <input type="submit" value="Submit" class="btn btn-success"> <br>
+
+               <div class="text-center text-primary font-weight-bold">
+                   <small>Existing User? <a href="{% url 'login' %}" class="text-danger">Login Now</a></small>
+
+               </div>
+               </form>
+
+           </div>
+
+       </div>
+
+    </div>
+
+
+{% endblock %}
+
+{% block scripts %}
+<!-- Add your JavaScript files here -->
+     <script src="{% static 'lib/easing/easing.min.js' %}"></script>
+    <script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script>
+
+    <!-- Contact Javascript File -->
+    <script src="{% static 'mail/jqBootstrapValidation.min.js' %}"></script>
+    <script src="{% static 'mail/contact.js' %}"></script>
+
+    <!-- Template Javascript -->
+    <script src="{% static 'js/main.js' %}"></script>
+{% endblock %}
