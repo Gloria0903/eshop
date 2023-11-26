@@ -28,8 +28,8 @@ urlpatterns = [
     path('cart/', views.cart, name='cart'),
     path('admin/', admin.site.urls),
     path('category/<slug:val>',views.CategoryView.as_view(),name='category'),
-    path('registration/',views.CustomerRegistrationForm,name='customerregistration'),
-    path('login/', views.my_view, name='login'),
-    path('logout/', views.logout_view, name='logout'),
+    path('registration/',views.customerregistration,name='customerregistration'),
+    path('login/', views.customerlogin, name='customerlogin'),
+    path('logout/', views.logout, name='logout'),
 
 ]

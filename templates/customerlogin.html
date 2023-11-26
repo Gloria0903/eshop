@@ -31,27 +31,24 @@
  </style>
 </head>
 
+
+
+
 {% extends 'base.html' %}
 
 {% block content %}
- <h2>Register</h2>
+ <h2>Login</h2>
  <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <div class="container">
-        <label for="name"><b>Name</b></label>
-        <input type="text" placeholder="Enter Name" name="name" required>
+        <label for="{{ form.username.id_for_label }}"><b>Username or Email</b></label>
+        <input type="text" placeholder="Enter Username or Email" id="{{ form.username.id_for_label }}" name="{{ form.username.name }}" required>
 
-        <label for="email"><b>Email</b></label>
-        <input type="text" placeholder="Enter Email" name="email" required>
+        <label for="{{ form.password.id_for_label }}"><b>Password</b></label>
+        <input type="password" placeholder="Enter Password" id="{{ form.password.id_for_label }}" name="{{ form.password.name }}" required>
 
-        <label for="password"><b>Password</b></label>
-        <input type="password" placeholder="Enter Password" name="password" required>
-
-        <label for="psw-repeat"><b>Confirm Password</b></label>
-        <input type="password" placeholder="Confirm Password" name="psw-repeat" required>
-        <hr>
+        <button type="submit">Login</button>
     </div>
-    <button type="submit">Register</button>
  </form>
 {% endblock %}
