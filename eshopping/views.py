@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib.auth import authenticate, login, logout
-from .models import Products, Customer
+from .models import Products, Customer, Category
 from django.contrib.auth.models import User
 
 
@@ -132,11 +132,7 @@ def delete(request, id):
     return redirect('/')
 
 
-# index view
-from django.shortcuts import render, redirect, HttpResponseRedirect
-# from store.models.product import Products
-# from store.models.category import Category
-from django.views import View
+
 
 
 # Create your views here.
@@ -199,12 +195,12 @@ from django.contrib.auth.hashers import check_password, make_password
 from django.views import View
 
 
-class Login(View):
+class CustomerLogin(View):
     return_url = None
 
     def get(self, request):
-        Login.return_url = request.GET.get('return_url')
-        return render(request, 'login.html')
+        customerlogin.return_url = request.GET.get('return_url')
+        return render(request, 'customerlogin.html')
 
     def post(self, request):
         email = request.POST.get('email')
@@ -216,10 +212,10 @@ class Login(View):
             if flag:
                 request.session['customer'] = customer.id
 
-                if Login.return_url:
-                    return HttpResponseRedirect(Login.return_url)
+                if customerlogin.return_url:
+                    return HttpResponseRedirect(customerlogin.return_url)
                 else:
-                    Login.return_url = None
+                    customerlogin.return_url = None
                     return redirect('homepage')
             else:
                 error_message = 'Invalid !!'
@@ -227,18 +223,18 @@ class Login(View):
             error_message = 'Invalid !!'
 
         print(email, password)
-        return render(request, 'login.html', {'error': error_message})
+        return render(request, 'customerlogin.html', {'error': error_message})
 
 
-def logout(request):
+def customerlogout(request):
     request.session.clear()
     return redirect('login')
 
 
 # signup view
-class Signup(View):
+class CustomerRegistration(View):
     def get(self, request):
-        return render(request, 'signup.html')
+        return render(request, 'customerregistration.html')
 
     def post(self, request):
         postData = request.POST
@@ -273,7 +269,7 @@ class Signup(View):
                 'error': error_message,
                 'values': value
             }
-            return render(request, 'signup.html', data)
+            return render(request, 'customerregistration.html', data)
 
     def validateCustomer(self, customer):
         error_message = None
@@ -299,18 +295,7 @@ class Signup(View):
 
         return error_message
 
-    # checkout view
 
-
-from django.shortcuts import render, redirect
-
-from django.contrib.auth.hashers import check_password
-# from store.models.customer import Customer
-from django.views import View
-
-
-# from store.models.product import Products
-# from store.models.orders import Order
 
 
 class CheckOut(View):
@@ -341,9 +326,6 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.hashers import check_password
 # from store.models.customer import Customer
 from django.views import View
-# from store.models.product import Products
-# from store.models.orders import Order
-# from store.middlewares.auth import auth_middleware
 
 
 class OrderView(View):

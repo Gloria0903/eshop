@@ -1,54 +1,55 @@
+<!doctype html>
+<html lang="en">
 <head>
- <style>
-    body {
-      font-family: Arial, sans-serif;
-    }
-    .container {
-      max-width: 300px;
-      padding-top: 40px;
-      margin: 0 auto;
-    }
-    input[type=text], input[type=password] {
-      width: 100%;
-      padding: 12px 20px;
-      margin: 8px 0;
-      display: inline-block;
-      border: 1px solid #0a815d;
-      box-sizing: border-box;
-    }
-    button {
-      background-color: rgba(54, 18, 18, 0.9);
-      color: #7a6565;
-      padding: 14px 20px;
-      margin: 8px 0;
-      border: none;
-      cursor: pointer;
-      width: 100%;
-    }
-    button:hover {
-      opacity: 0.8;
-    }
- </style>
+    {% load static %}
+
+    <meta charset="utf-8">
+    <title>EShopper -Chicc</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Free HTML Templates" name="keywords">
+    <meta content="Free HTML Templates" name="description">
+
+    <!-- Favicon -->
+    <link href="{% static 'img/cat-1.jpg' %}" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
 </head>
+<body>
+<form action="/user_login/" method="post" class="forming"> {% csrf_token %}
 
+   <h1>User Login</h1>
 
+     <label for="name">Username:</label>
+     <input type="text" id="user_username" name="user_username">
 
+     <label for="password">Password:</label>
+     <input type="password" id="user_password" name="user_password">
 
-{% extends 'base.html' %}
-
-{% block content %}
- <h2>Login</h2>
- <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <div class="container">
-        <label for="{{ form.username.id_for_label }}"><b>Username or Email</b></label>
-        <input type="text" placeholder="Enter Username or Email" id="{{ form.username.id_for_label }}" name="{{ form.username.name }}" required>
-
-        <label for="{{ form.password.id_for_label }}"><b>Password</b></label>
-        <input type="password" placeholder="Enter Password" id="{{ form.password.id_for_label }}" name="{{ form.password.name }}" required>
-
-        <button type="submit">Login</button>
-    </div>
+   <button class="login" type="submit">Login</button>
  </form>
-{% endblock %}
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'lib/easing/easing.min.js' %}"></script>
+    <script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script>
+
+    <!-- Contact Javascript File -->
+    <script src="{% static 'mail/jqBootstrapValidation.min.js' %}"></script>
+    <script src="{% static 'mail/contact.js' %}"></script>
+
+    <!-- Template Javascript -->
+    <script src="{% static 'js/main.js' %}"></script>
+
+</body>
+</html>

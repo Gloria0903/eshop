@@ -1,5 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
+import datetime
+
+
 
 CATEGORY_CHOICES = (
     ('MN', 'Mens_clothing'),
@@ -47,7 +50,6 @@ class Customer(models.Model):
 
 
 # category models
-from django.db import models
 
 
 class Category(models.Model):
@@ -62,7 +64,7 @@ class Category(models.Model):
 
 
 # customer models
-from django.db import models
+
 
 
 class Customer(models.Model):
@@ -90,11 +92,7 @@ class Customer(models.Model):
         return False
 
 
-# orders models
-# from django.db import models
-# from .products import Products
-# from .customer import Customer
-import datetime
+
 
 
 class Order(models.Model):
@@ -117,41 +115,7 @@ class Order(models.Model):
         return Order.objects.filter(customer=customer_id).order_by('-date')
 
 
-# products models
-from django.db import models
-# from .category import Category
-
-
-class Products(models.Model):
-    name = models.CharField(max_length=60)
-    price = models.IntegerField(default=0)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, default=1)
-    description = models.CharField(
-        max_length=250, default='', blank=True, null=True)
-    image = models.ImageField(upload_to='uploads/products/')
-
-    @staticmethod
-    def get_products_by_id(ids):
-        return Products.objects.filter(id__in=ids)
-
-    @staticmethod
-    def get_all_products():
-        return Products.objects.all()
-
-    @staticmethod
-    def get_all_products_by_categoryid(category_id):
-        if category_id:
-            return Products.objects.filter(category=category_id)
-        else:
-            return Products.get_all_products()
-
-
 # cart model
-from django.db import models
-# from .product import Products
-# from .customer import Customer
-import datetime
-
 
 class Order(models.Model):
     product = models.ForeignKey(Products,

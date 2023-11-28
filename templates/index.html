@@ -135,7 +135,7 @@
                         <div class="navbar-nav mr-auto py-0">
                             <a href="{% url 'index' %}" class="nav-item nav-link active">Home</a>
                             <a href="{% url 'shop' %}" class="nav-item nav-link">Shop</a>
-                            <a href="{% url 'detail' %}" class="nav-item nav-link">Shop Detail</a>
+{#                            <a href="{% url 'detail' %}" class="nav-item nav-link">Shop Detail</a>#}
                             <div class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages</a>
                                 <div class="dropdown-menu rounded-0 m-0">
@@ -316,149 +316,149 @@
 
 
     <!-- Products Start -->
-    <div class="container-fluid pt-5">
-        <div class="text-center mb-4">
-            <h2 class="section-title px-5"><span class="px-2">Trendy Products</span></h2>
-        </div>
-        <div class="row px-xl-5 pb-3">
-            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-                <div class="card product-item border-0 mb-4">
-                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                        <img class="img-fluid w-100" src="{% static 'img/product-1.jpg' %}" alt="">
-                    </div>
-                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>
-                        <div class="d-flex justify-content-center">
-                            <h6>ksh900.00</h6><h6 class="text-muted ml-2"><del>ksh900.00</del></h6>
-                        </div>
-                    </div>
-                    <div class="card-footer d-flex justify-content-between bg-light border">
-                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
-                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-                <div class="card product-item border-0 mb-4">
-                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                        <img class="img-fluid w-100" src="{% static 'img/product-2.jpg' %}" alt="">
-                    </div>
-                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>
-                        <div class="d-flex justify-content-center">
-                            <h6>ksh910.00</h6><h6 class="text-muted ml-2"><del>ksh910.00</del></h6>
-                        </div>
-                    </div>
-                    <div class="card-footer d-flex justify-content-between bg-light border">
-                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
-                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-                <div class="card product-item border-0 mb-4">
-                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                        <img class="img-fluid w-100" src="{% static 'img/product-3.jpg' %}" alt="">
-                    </div>
-                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>
-                        <div class="d-flex justify-content-center">
-                            <h6>ksh2200.00</h6><h6 class="text-muted ml-2"><del>ksh1200.00</del></h6>
-                        </div>
-                    </div>
-                    <div class="card-footer d-flex justify-content-between bg-light border">
-                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
-                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-                <div class="card product-item border-0 mb-4">
-                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                        <img class="img-fluid w-100" src="{% static 'img/product-4.jpg' %}" alt="">
-                    </div>
-                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>
-                        <div class="d-flex justify-content-center">
-                            <h6>ksh1230.00</h6><h6 class="text-muted ml-2"><del>ksh1230.00</del></h6>
-                        </div>
-                    </div>
-                    <div class="card-footer d-flex justify-content-between bg-light border">
-                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
-                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-                <div class="card product-item border-0 mb-4">
-                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                        <img class="img-fluid w-100" src="{% static 'img/product-5.jpg' %}" alt="">
-                    </div>
-                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>
-                        <div class="d-flex justify-content-center">
-                            <h6>ksh1100.00</h6><h6 class="text-muted ml-2"><del>ksh1100.00</del></h6>
-                        </div>
-                    </div>
-                    <div class="card-footer d-flex justify-content-between bg-light border">
-                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
-                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-                <div class="card product-item border-0 mb-4">
-                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                        <img class="img-fluid w-100" src="{% static 'img/product-6.jpg' %}" alt="">
-                    </div>
-                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>
-                        <div class="d-flex justify-content-center">
-                            <h6>ksh1340.00</h6><h6 class="text-muted ml-2"><del>ksh1340.00</del></h6>
-                        </div>
-                    </div>
-                    <div class="card-footer d-flex justify-content-between bg-light border">
-                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
-                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-                <div class="card product-item border-0 mb-4">
-                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                        <img class="img-fluid w-100" src="{% static 'img/product-7.jpg' %}" alt="">
-                    </div>
-                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>
-                        <div class="d-flex justify-content-center">
-                            <h6>ksh1500.00</h6><h6 class="text-muted ml-2"><del>ksh1500.00</del></h6>
-                        </div>
-                    </div>
-                    <div class="card-footer d-flex justify-content-between bg-light border">
-                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
-                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-                <div class="card product-item border-0 mb-4">
-                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                        <img class="img-fluid w-100" src="{% static 'img/product-8.jpg' %}" alt="">
-                    </div>
-                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>
-                        <div class="d-flex justify-content-center">
-                            <h6>ksh1450.00</h6><h6 class="text-muted ml-2"><del>ksh1450.00</del></h6>
-                        </div>
-                    </div>
-                    <div class="card-footer d-flex justify-content-between bg-light border">
-                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
-                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+{#    <div class="container-fluid pt-5">#}
+{#        <div class="text-center mb-4">#}
+{#            <h2 class="section-title px-5"><span class="px-2">Trendy Products</span></h2>#}
+{#        </div>#}
+{#        <div class="row px-xl-5 pb-3">#}
+{#            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">#}
+{#                <div class="card product-item border-0 mb-4">#}
+{#                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">#}
+{#                        <img class="img-fluid w-100" src="{% static 'img/product-1.jpg' %}" alt="">#}
+{#                    </div>#}
+{#                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">#}
+{#                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>#}
+{#                        <div class="d-flex justify-content-center">#}
+{#                            <h6>ksh900.00</h6><h6 class="text-muted ml-2"><del>ksh900.00</del></h6>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="card-footer d-flex justify-content-between bg-light border">#}
+{#                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>#}
+{#                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">#}
+{#                <div class="card product-item border-0 mb-4">#}
+{#                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">#}
+{#                        <img class="img-fluid w-100" src="{% static 'img/product-2.jpg' %}" alt="">#}
+{#                    </div>#}
+{#                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">#}
+{#                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>#}
+{#                        <div class="d-flex justify-content-center">#}
+{#                            <h6>ksh910.00</h6><h6 class="text-muted ml-2"><del>ksh910.00</del></h6>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="card-footer d-flex justify-content-between bg-light border">#}
+{#                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>#}
+{#                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">#}
+{#                <div class="card product-item border-0 mb-4">#}
+{#                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">#}
+{#                        <img class="img-fluid w-100" src="{% static 'img/product-3.jpg' %}" alt="">#}
+{#                    </div>#}
+{#                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">#}
+{#                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>#}
+{#                        <div class="d-flex justify-content-center">#}
+{#                            <h6>ksh2200.00</h6><h6 class="text-muted ml-2"><del>ksh1200.00</del></h6>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="card-footer d-flex justify-content-between bg-light border">#}
+{#                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>#}
+{#                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">#}
+{#                <div class="card product-item border-0 mb-4">#}
+{#                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">#}
+{#                        <img class="img-fluid w-100" src="{% static 'img/product-4.jpg' %}" alt="">#}
+{#                    </div>#}
+{#                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">#}
+{#                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>#}
+{#                        <div class="d-flex justify-content-center">#}
+{#                            <h6>ksh1230.00</h6><h6 class="text-muted ml-2"><del>ksh1230.00</del></h6>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="card-footer d-flex justify-content-between bg-light border">#}
+{#                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>#}
+{#                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">#}
+{#                <div class="card product-item border-0 mb-4">#}
+{#                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">#}
+{#                        <img class="img-fluid w-100" src="{% static 'img/product-5.jpg' %}" alt="">#}
+{#                    </div>#}
+{#                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">#}
+{#                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>#}
+{#                        <div class="d-flex justify-content-center">#}
+{#                            <h6>ksh1100.00</h6><h6 class="text-muted ml-2"><del>ksh1100.00</del></h6>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="card-footer d-flex justify-content-between bg-light border">#}
+{#                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>#}
+{#                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">#}
+{#                <div class="card product-item border-0 mb-4">#}
+{#                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">#}
+{#                        <img class="img-fluid w-100" src="{% static 'img/product-6.jpg' %}" alt="">#}
+{#                    </div>#}
+{#                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">#}
+{#                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>#}
+{#                        <div class="d-flex justify-content-center">#}
+{#                            <h6>ksh1340.00</h6><h6 class="text-muted ml-2"><del>ksh1340.00</del></h6>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="card-footer d-flex justify-content-between bg-light border">#}
+{#                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>#}
+{#                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">#}
+{#                <div class="card product-item border-0 mb-4">#}
+{#                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">#}
+{#                        <img class="img-fluid w-100" src="{% static 'img/product-7.jpg' %}" alt="">#}
+{#                    </div>#}
+{#                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">#}
+{#                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>#}
+{#                        <div class="d-flex justify-content-center">#}
+{#                            <h6>ksh1500.00</h6><h6 class="text-muted ml-2"><del>ksh1500.00</del></h6>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="card-footer d-flex justify-content-between bg-light border">#}
+{#                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>#}
+{#                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">#}
+{#                <div class="card product-item border-0 mb-4">#}
+{#                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">#}
+{#                        <img class="img-fluid w-100" src="{% static 'img/product-8.jpg' %}" alt="">#}
+{#                    </div>#}
+{#                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">#}
+{#                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>#}
+{#                        <div class="d-flex justify-content-center">#}
+{#                            <h6>ksh1450.00</h6><h6 class="text-muted ml-2"><del>ksh1450.00</del></h6>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="card-footer d-flex justify-content-between bg-light border">#}
+{#                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>#}
+{#                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
     <!-- Products End -->
 
 
@@ -493,12 +493,12 @@
             <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
                 <div class="card product-item border-0 mb-4">
                     <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                        <img class="img-fluid w-100" src="{% static 'img/product-1.jpg' %}" alt="">
+                        <img class="img-fluid w-100" src="{% static 'img/jackets.jpg' %}" alt="">
                     </div>
                     <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>
+                        <h6 class="text-truncate mb-3">Warm Jacket</h6>
                         <div class="d-flex justify-content-center">
-                            <h6>ksh900.00</h6><h6 class="text-muted ml-2"><del>ksh900.00</del></h6>
+                            <h6>ksh1900.00</h6><h6 class="text-muted ml-2"><del>ksh2900.00</del></h6>
                         </div>
                     </div>
                     <div class="card-footer d-flex justify-content-between bg-light border">
@@ -510,12 +510,12 @@
             <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
                 <div class="card product-item border-0 mb-4">
                     <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                        <img class="img-fluid w-100" src="{% static 'img/product-2.jpg' %}" alt="">
+                        <img class="img-fluid w-100" src="{% static 'img/swim.jpg' %}" alt="">
                     </div>
                     <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>
+                        <h6 class="text-truncate mb-3">Swim wear</h6>
                         <div class="d-flex justify-content-center">
-                            <h6>ksh910.00</h6><h6 class="text-muted ml-2"><del>ksh910.00</del></h6>
+                            <h6>ksh910.00</h6><h6 class="text-muted ml-2"><del>ksh1910.00</del></h6>
                         </div>
                     </div>
                     <div class="card-footer d-flex justify-content-between bg-light border">
@@ -527,12 +527,12 @@
             <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
                 <div class="card product-item border-0 mb-4">
                     <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                        <img class="img-fluid w-100" src="{% static 'img/product-3.jpg' %}" alt="">
+                        <img class="img-fluid w-100" src="{% static 'img/sleep.jpg' %}" alt="">
                     </div>
                     <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>
+                        <h6 class="text-truncate mb-3">Sleep wear</h6>
                         <div class="d-flex justify-content-center">
-                            <h6>ksh1200.00</h6><h6 class="text-muted ml-2"><del>ksh1200.00</del></h6>
+                            <h6>ksh1200.00</h6><h6 class="text-muted ml-2"><del>ksh1500.00</del></h6>
                         </div>
                     </div>
                     <div class="card-footer d-flex justify-content-between bg-light border">
@@ -544,12 +544,12 @@
             <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
                 <div class="card product-item border-0 mb-4">
                     <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                        <img class="img-fluid w-100" src="{% static 'img/product-4.jpg' %}" alt="">
+                        <img class="img-fluid w-100" src="{% static 'img/sport.jpg' %}" alt="">
                     </div>
                     <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
                         <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>
                         <div class="d-flex justify-content-center">
-                            <h6>ksh1230.00</h6><h6 class="text-muted ml-2"><del>ksh1230.00</del></h6>
+                            <h6>ksh1230.00</h6><h6 class="text-muted ml-2"><del>ksh2230.00</del></h6>
                         </div>
                     </div>
                     <div class="card-footer d-flex justify-content-between bg-light border">
@@ -561,12 +561,12 @@
             <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
                 <div class="card product-item border-0 mb-4">
                     <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                        <img class="img-fluid w-100" src="{% static 'img/product-5.jpg' %}" alt="">
+                        <img class="img-fluid w-100" src="{% static 'img/babys c.jpg' %}" alt="">
                     </div>
                     <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>
+                        <h6 class="text-truncate mb-3">Baby's Fit</h6>
                         <div class="d-flex justify-content-center">
-                            <h6>ksh1100.00</h6><h6 class="text-muted ml-2"><del>ksh1100.00</del></h6>
+                            <h6>ksh1100.00</h6><h6 class="text-muted ml-2"><del>ksh2100.00</del></h6>
                         </div>
                     </div>
                     <div class="card-footer d-flex justify-content-between bg-light border">
@@ -578,12 +578,12 @@
             <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
                 <div class="card product-item border-0 mb-4">
                     <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                        <img class="img-fluid w-100" src="{% static 'img/product-6.jpg' %}" alt="">
+                        <img class="img-fluid w-100" src="{% static 'img/blazers.jpg' %}" alt="">
                     </div>
                     <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>
+                        <h6 class="text-truncate mb-3">Blazers</h6>
                         <div class="d-flex justify-content-center">
-                            <h6>ksh1340.00</h6><h6 class="text-muted ml-2"><del>ksh1340.00</del></h6>
+                            <h6>ksh1340.00</h6><h6 class="text-muted ml-2"><del>ksh2340.00</del></h6>
                         </div>
                     </div>
                     <div class="card-footer d-flex justify-content-between bg-light border">
@@ -595,12 +595,12 @@
             <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
                 <div class="card product-item border-0 mb-4">
                     <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                        <img class="img-fluid w-100" src="{% static 'img/product-7.jpg' %}" alt="">
+                        <img class="img-fluid w-100" src="{% static 'img/jumpsuits.jpg' %}" alt="">
                     </div>
                     <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>
+                        <h6 class="text-truncate mb-3">Jumpsuits</h6>
                         <div class="d-flex justify-content-center">
-                            <h6>ksh1500.00</h6><h6 class="text-muted ml-2"><del>ksh1500.00</del></h6>
+                            <h6>ksh1500.00</h6><h6 class="text-muted ml-2"><del>ksh1700.00</del></h6>
                         </div>
                     </div>
                     <div class="card-footer d-flex justify-content-between bg-light border">
@@ -612,12 +612,12 @@
             <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
                 <div class="card product-item border-0 mb-4">
                     <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                        <img class="img-fluid w-100" src="{% static 'img/product-8.jpg' %}" alt="">
+                        <img class="img-fluid w-100" src="{% static 'img/mens c.jpg' %}" alt="">
                     </div>
                     <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>
+                        <h6 class="text-truncate mb-3">Mens fit</h6>
                         <div class="d-flex justify-content-center">
-                            <h6>ksh1450.00</h6><h6 class="text-muted ml-2"><del>ksh1450.00</del></h6>
+                            <h6>ksh1450.00</h6><h6 class="text-muted ml-2"><del>ksh1850.00</del></h6>
                         </div>
                     </div>
                     <div class="card-footer d-flex justify-content-between bg-light border">
@@ -631,40 +631,40 @@
     <!-- Products End -->
 
 
-    <!-- Vendor Start -->
-    <div class="container-fluid py-5">
-        <div class="row px-xl-5">
-            <div class="col">
-                <div class="owl-carousel vendor-carousel">
-                    <div class="vendor-item border p-4">
-                        <img src="{% static 'img/v1.jpg' %}" alt="">
-                    </div>
-                    <div class="vendor-item border p-4">
-                        <img src="{% static 'img/v2.jpg' %}" alt="">
-                    </div>
-                    <div class="vendor-item border p-4">
-                        <img src="{% static 'img/v3.jpg' %}" alt="">
-                    </div>
-                    <div class="vendor-item border p-4">
-                        <img src="{% static 'img/4.jpg' %}" alt="">
-                    </div>
-                    <div class="vendor-item border p-4">
-                        <img src="{% static 'img/v5.jpg' %}" alt="">
-                    </div>
-                    <div class="vendor-item border p-4">
-                        <img src="{% static 'img/v6.jpg' %}" alt="">
-                    </div>
-                    <div class="vendor-item border p-4">
-                        <img src="{% static 'img/v7.jpg' %}" alt="">
-                    </div>
-                    <div class="vendor-item border p-4">
-                        <img src="{% static 'img/v8#.jpg' %}" alt="">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Vendor End -->
+{#    <!-- Vendor Start -->#}
+{#    <div class="container-fluid py-5">#}
+{#        <div class="row px-xl-5">#}
+{#            <div class="col">#}
+{#                <div class="owl-carousel vendor-carousel">#}
+{#                    <div class="vendor-item border p-4">#}
+{#                        <img src="{% static 'img/v1.jpg' %}" alt="">#}
+{#                    </div>#}
+{#                    <div class="vendor-item border p-4">#}
+{#                        <img src="{% static 'img/v2.jpg' %}" alt="">#}
+{#                    </div>#}
+{#                    <div class="vendor-item border p-4">#}
+{#                        <img src="{% static 'img/v3.jpg' %}" alt="">#}
+{#                    </div>#}
+{#                    <div class="vendor-item border p-4">#}
+{#                        <img src="{% static 'img/4.jpg' %}" alt="">#}
+{#                    </div>#}
+{#                    <div class="vendor-item border p-4">#}
+{#                        <img src="{% static 'img/v5.jpg' %}" alt="">#}
+{#                    </div>#}
+{#                    <div class="vendor-item border p-4">#}
+{#                        <img src="{% static 'img/v6.jpg' %}" alt="">#}
+{#                    </div>#}
+{#                    <div class="vendor-item border p-4">#}
+{#                        <img src="{% static 'img/v7.jpg' %}" alt="">#}
+{#                    </div>#}
+{#                    <div class="vendor-item border p-4">#}
+{#                        <img src="{% static 'img/v8#.jpg' %}" alt="">#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#    <!-- Vendor End -->#}
 
 
     <!-- Footer Start -->
