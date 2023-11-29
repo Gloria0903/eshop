@@ -16,6 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
 from . import views
 
 urlpatterns = [
@@ -29,7 +31,9 @@ urlpatterns = [
     # path('admin/', admin.site.urls),
     path('category/<slug:val>',views.CategoryView.as_view(),name='category'),
     path('registration/',views.CustomerRegistration.as_view(),name='customerregistration'),
-    path('login/', views.customer_login, name='customerlogin'),
+    path('login/', views.CustomerLogin.as_view(), name='customerlogin'),
     path('logout/', views.customer_logout, name='logout'),
 
 ]
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
