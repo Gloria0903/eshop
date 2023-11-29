@@ -11,7 +11,9 @@ from .models import Products, Customer, Category,Order
 
 def index(request):
     '''load index.html'''
-    return render(request, 'index.html')
+    #pylint: disable = E1101:no-member
+    products = Products.objects.all()
+    return render(request, 'index.html',{'products': products})
 
 
 def shop(request):
@@ -101,7 +103,7 @@ def update_data(request, id):
         product.save()
         return redirect('/')
     else:
-        #pylint: disable = E1101
+        # pylint: disable = E1101:no-member
         p = Products.objects.get(id=id)
         return render(request, 'category.html', {'p': p})
 
