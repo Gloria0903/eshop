@@ -29,19 +29,23 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'eshopping',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'store',
+    # 'store',
     'django.contrib.sites',
+
+
 
     # 'allauth',
     # 'allauth.account',
     # 'allauth.socialaccount',
+
+    'eshopping',
+
 
 ]
 

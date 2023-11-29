@@ -26,10 +26,10 @@ urlpatterns = [
     path('contact/', views.contact, name='contact'),
     path('checkout/', views.checkout, name='checkout'),
     path('cart/', views.cart, name='cart'),
-    path('admin/', admin.site.urls),
+    # path('admin/', admin.site.urls),
     path('category/<slug:val>',views.CategoryView.as_view(),name='category'),
-    path('registration/',views.customerregistration,name='customerregistration'),
-    path('login/', views.customerlogin, name='customerlogin'),
-    path('logout/', views.logout, name='logout'),
+    path('registration/',views.CustomerRegistration.as_view(),name='customerregistration'),
+    path('login/', views.customer_login, name='customerlogin'),
+    path('logout/', views.customer_logout, name='logout'),
 
 ]
