@@ -11,6 +11,9 @@ class CustomerRegistrationForm(UserCreationForm):
     first_name = forms.CharField(widget=forms.TextInput(attrs={
         'autofocus': 'True', 'class': 'form-control'
         }))
+    username = forms.CharField(widget=forms.TextInput(attrs={
+        'autofocus': 'True', 'class': 'form-control'
+        }))
     last_name = forms.CharField(widget=forms.TextInput(attrs={
         'autofocus': 'True', 'class': 'form-control'
         }))
@@ -21,5 +24,8 @@ class CustomerRegistrationForm(UserCreationForm):
         'class':'form-control'
     }))
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput(attrs={
+            'class': 'form-control'
+        }))
+    password2 = forms.CharField(label='Password', widget=forms.PasswordInput(attrs={
             'class': 'form-control'
         }))

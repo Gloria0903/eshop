@@ -266,8 +266,10 @@ class CustomerRegistration(View):
         if form.is_valid():
             # Process valid form data
             form.save()
-            return redirect('homepage')
+            messages.success(request, 'Registration successful. You can now log in.')
+            return redirect('index')
         else:
+            messages.error(request, 'Registration failed. Please correct the errors below.')
             # Form is invalid, pass form to template for error display
             return render(request, 'customerregistration.html', {'form': form})
 

@@ -71,7 +71,11 @@
                         </div>
                         <div class="col-md-6 form-group">
                             <label>Last Name</label>
-                            <input class="form-control" type="text" name='lat_name' placeholder="">
+                            <input class="form-control" type="text" name='last_name' placeholder="">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Username</label>
+                            <input class="form-control" type="text" name='username' placeholder="">
                         </div>
                         <div class="col-md-6 form-group">
                             <label>E-mail</label>
@@ -83,17 +87,34 @@
                         </div>
                         <div class="col-md-6 form-group">
                             <label>Password</label>
-                            <input class="form-control" type="text" placeholder="">
+                            <input class="form-control" type="text" placeholder="" name='password1'>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Confirm Password</label>
+                            <input class="form-control" type="text" placeholder="" name='password2'>
                         </div>
                     </div>
                     <div class="card-footer border-secondary bg-transparent">
-                        <button class="btn btn-lg btn-block btn-primary font-weight-bold my-3 py-3">Register</button>
+                        <button class="btn btn-lg btn-block btn-primary font-weight-bold my-3 py-3" type ='submit'>Register</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </form>
+
+{% if form.errors %}
+    <div class="alert alert-danger mt-3">
+        <strong>Error:</strong> Please correct the following errors.
+        <ul>
+            {% for field, errors in form.errors.items %}
+                {% for error in errors %}
+                    <li>{{ field|title }}: {{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
 {#    <!-- Checkout End -->#}
 {##}
 {##}
