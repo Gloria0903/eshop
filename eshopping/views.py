@@ -1,12 +1,9 @@
 '''views.py file'''
 from django.contrib import messages
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.hashers import check_password,make_password
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.views import View
-from django.contrib.auth import authenticate, login
-
 from eshopping.forms import CustomerRegistrationForm
 from .models import Products, Customer, Category,Order
 # from django.contrib.auth.models import User
@@ -51,37 +48,6 @@ class CategoryView(View):
     '''load northing yet'''
     #pylint: disable = W0107
     pass
-
-
-def customer_registration(request):
-    '''customer authentication'''
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            customer = Customer(user=user, name=request.POST['name'], email=request.POST['email'])
-            customer.save()
-            login(request, user)
-            return redirect('index')
-    else:
-        form = UserCreationForm()
-    return render(request, 'customerregistration.html', {'form': form})
-
-
-def customer_login(request):
-    '''customer login'''
-    if request.method == 'POST':
-        email = request.POST['email']
-        password = request.POST['password']
-        user = authenticate(request, email=email, password=password)
-        if user is not None:
-            login(request, user)
-            return redirect('index')
-        else:
-            messages.error(request, 'Invalid username or password')
-            return redirect('login')
-    else:
-        return render(request, 'customerlogin.html')
 
 
 # create
@@ -148,9 +114,6 @@ def delete(request, id):
     p = Products.objects.get(id=id)
     p.delete()
     return redirect('/')
-
-
-
 
 
 # Create your views here.
@@ -234,7 +197,7 @@ class CustomerLogin(View):
             if flag:
                 request.session['customer'] = customer.id
                 if CustomerLogin.return_url:
-                    return HttpResponseRedirect(customer_login.return_url)
+                    return HttpResponseRedirect(CustomerLogin.return_url)
                 else:
                     CustomerLogin.return_url = None
                     return redirect('index')
@@ -244,7 +207,8 @@ class CustomerLogin(View):
             error_message = 'Invalid email'
 
         if customer:
-            print("Email:", customer.email)  # Check if customer is not None before accessing attributes
+            # Check if customer is not None before accessing attributes
+            print("Email:", customer.email)
         else:
             print("Customer not found for email:", email)
 
