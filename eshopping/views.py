@@ -1,45 +1,59 @@
+'''views.py file'''
 from django.contrib import messages
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.views import View
-from django.contrib.auth import authenticate, login, logout
-from .models import Products, Customer, Category
-from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login
+
+from eshopping.forms import CustomerRegistrationForm
+from .models import Products, Customer, Category,Order
+# from django.contrib.auth.models import User
 
 
 def index(request):
+    '''load index.html'''
     return render(request, 'index.html')
 
 
 def shop(request):
+    '''load shop.html'''
     return render(request, 'shop.html')
 
 
 def detail(request):
+    '''load detail.html'''
     return render(request, 'detail.html')
 
 
 def contact(request):
+    '''load contact.html'''
     return render(request, 'contact.html')
 
 
 def checkout(request):
+    '''load checkout.html'''
     return render(request, 'checkout.html')
 
 
 def cart(request):
+    '''load cart.html'''
     return render(request, 'cart.html')
 
-
+# pylint: disable = W0613
 def get(request, val):
+    '''load category.html'''
     return render(request, 'category.html', locals())
 
 
 class CategoryView(View):
+    '''load northing yet'''
+    #pylint: disable = W0107
     pass
 
 
-def customerregistration(request):
+def customer_registration(request):
+    '''customer authentication'''
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
@@ -53,7 +67,8 @@ def customerregistration(request):
     return render(request, 'customerregistration.html', {'form': form})
 
 
-def customerlogin(request):
+def customer_login(request):
+    '''customer login'''
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -68,16 +83,11 @@ def customerlogin(request):
         return render(request, 'customerlogin.html')
 
 
-# Read
-def index(request):
-    data = Products.objects.all()
-    return render(request, 'index.html', {'data': data})
-
-
 # create
-def insertData(request):
+def insert_data(request):
+    '''add data to db'''
     if request.method == 'POST':
-        productname = request.POST.get('productname')
+        product_name = request.POST.get('productname')
         title = request.POST.get('title')
         selling_price = request.POST.get('selling_price')
         discounted_price = request.POST.get('discounted_price')
@@ -85,19 +95,22 @@ def insertData(request):
         composition = request.POST.get('composition')
         category = request.POST.get('category')
         product_image = request.POST.get('product_image')
-        hifadhi = Products(productname=productname, title=title, selling_price=selling_price,
-                           discounted_price=discounted_price, description=description, composition=composition,
-                           category=category, product_image=product_image)
+        create_product = Products(productname=product_name, title=title,
+                        selling_price=selling_price,
+                        discounted_price=discounted_price, description=description,
+                        composition=composition,
+                        category=category, product_image=product_image)
 
-        hifadhi.save()
+        create_product.save()
         return redirect('/')
     else:
         return render(request, 'index.html')
 
         # Update
 
-
-def updateData(request, id):
+# pylint: disable = W0622
+def update_data(request, id):
+    '''update the data in db'''
     if request.method == 'POST':
         productname = request.POST.get('productname')
         title = request.POST.get('title')
@@ -108,25 +121,29 @@ def updateData(request, id):
         category = request.POST.get('category')
         product_image = request.POST.get('product_image')
 
-        rekebisha = Products.objects.get(id=id)
-        rekebisha.productname = productname
-        rekebisha.title = title
-        rekebisha.selling_price = selling_price
-        rekebisha.discounted_price = discounted_price
-        rekebisha.description = description
-        rekebisha.composition = composition
-        rekebisha.category = category
-        rekebisha.product_image = product_image
-        rekebisha.save()
+        #pylint: disable = E1101
+        product = Products.objects.get(id=id)
+        product.productname = productname
+        product.title = title
+        product.selling_price = selling_price
+        product.discounted_price = discounted_price
+        product.description = description
+        product.composition = composition
+        product.category = category
+        product.product_image = product_image
+        product.save()
         return redirect('/')
     else:
+        #pylint: disable = E1101
         p = Products.objects.get(id=id)
         return render(request, 'category.html', {'p': p})
 
         # delete
 
-
+# pylint: disable = W0613
 def delete(request, id):
+    '''load delete product'''
+    #pylint: disable= E1101
     p = Products.objects.get(id=id)
     p.delete()
     return redirect('/')
@@ -137,10 +154,12 @@ def delete(request, id):
 
 # Create your views here.
 class Index(View):
-
+    '''handles index'''
     def post(self, request):
+        '''posting'''
         product = request.POST.get('product')
         remove = request.POST.get('remove')
+        #pylint: disable = W0621:redefined-outer-name
         cart = request.session.get('cart')
         if cart:
             quantity = cart.get(product)
@@ -164,19 +183,22 @@ class Index(View):
         return redirect('homepage')
 
     def get(self, request):
+        '''gets cart'''
         # print()
         return HttpResponseRedirect(f'/store{request.get_full_path()[1:]}')
 
 
 def store(request):
+    '''handles store'''
+    #pylint: disable = W0621
     cart = request.session.get('cart')
     if not cart:
         request.session['cart'] = {}
     products = None
     categories = Category.get_all_categories()
-    categoryID = request.GET.get('category')
-    if categoryID:
-        products = Products.get_all_products_by_categoryid(categoryID)
+    category_id = request.GET.get('category')
+    if category_id:
+        products = Products.get_all_products_by_category_id(category_id)
     else:
         products = Products.get_all_products()
 
@@ -189,20 +211,19 @@ def store(request):
 
 
 # login/logout view
-from django.shortcuts import render, redirect, HttpResponseRedirect
-from django.contrib.auth.hashers import check_password, make_password
-# from store.models.customer import Customer
-from django.views import View
 
 
 class CustomerLogin(View):
+    '''customer login'''
     return_url = None
 
     def get(self, request):
-        customerlogin.return_url = request.GET.get('return_url')
+        '''customer login'''
+        customer_login.return_url = request.GET.get('return_url')
         return render(request, 'customerlogin.html')
 
     def post(self, request):
+        '''customer login'''
         email = request.POST.get('email')
         password = request.POST.get('password')
         customer = Customer.get_customer_by_email(email)
@@ -212,10 +233,10 @@ class CustomerLogin(View):
             if flag:
                 request.session['customer'] = customer.id
 
-                if customerlogin.return_url:
-                    return HttpResponseRedirect(customerlogin.return_url)
+                if customer_login.return_url:
+                    return HttpResponseRedirect(customer_login.return_url)
                 else:
-                    customerlogin.return_url = None
+                    customer_login.return_url = None
                     return redirect('homepage')
             else:
                 error_message = 'Invalid !!'
@@ -226,53 +247,36 @@ class CustomerLogin(View):
         return render(request, 'customerlogin.html', {'error': error_message})
 
 
-def customerlogout(request):
+def customer_logout(request):
+    '''logouts customer out the system'''
     request.session.clear()
     return redirect('login')
 
 
 # signup view
 class CustomerRegistration(View):
+    '''register customer'''
     def get(self, request):
+        '''loads register html file'''
         return render(request, 'customerregistration.html')
 
     def post(self, request):
-        postData = request.POST
-        first_name = postData.get('firstname')
-        last_name = postData.get('lastname')
-        phone = postData.get('phone')
-        email = postData.get('email')
-        password = postData.get('password')
-        # validation
-        value = {
-            'first_name': first_name,
-            'last_name': last_name,
-            'phone': phone,
-            'email': email
-        }
-        error_message = None
-
-        customer = Customer(first_name=first_name,
-                            last_name=last_name,
-                            phone=phone,
-                            email=email,
-                            password=password)
-        error_message = self.validateCustomer(customer)
-
-        if not error_message:
-            print(first_name, last_name, phone, email, password)
-            customer.password = make_password(customer.password)
-            customer.register()
-            return redirect('homepage')
+        '''create customer'''
+        form = CustomerRegistrationForm(request.POST)
+        if form.is_valid():
+            # Process valid form data
+            form.save()
+            messages.success(request, 'Registration successful. You can now log in.')
+            return redirect('index')
         else:
-            data = {
-                'error': error_message,
-                'values': value
-            }
-            return render(request, 'customerregistration.html', data)
+            messages.error(request, 'Registration failed. Please correct the errors below.')
+            # Form is invalid, pass form to template for error display
+            return render(request, 'customerregistration.html', {'form': form})
 
-    def validateCustomer(self, customer):
+    def validate_customer(self, customer):
+        '''validates customer'''
         error_message = None
+        # pylint: disable = C0325
         if (not customer.first_name):
             error_message = "Please Enter your First Name !!"
         elif len(customer.first_name) < 3:
@@ -299,22 +303,26 @@ class CustomerRegistration(View):
 
 
 class CheckOut(View):
+    '''checkout for customer'''
     def post(self, request):
+        '''post a checkout'''
         address = request.POST.get('address')
         phone = request.POST.get('phone')
         customer = request.session.get('customer')
+        # pylint: disable = W0621
         cart = request.session.get('cart')
+        #pylint: disable = E1101
         products = Products.get_products_by_id(list(cart.keys()))
         print(address, phone, customer, cart, products)
 
         for product in products:
             print(cart.get(str(product.id)))
             order = Order(customer=Customer(id=customer),
-                          product=product,
-                          price=product.price,
-                          address=address,
-                          phone=phone,
-                          quantity=cart.get(str(product.id)))
+                        product=product,
+                        price=product.price,
+                        address=address,
+                        phone=phone,
+                        quantity=cart.get(str(product.id)))
             order.save()
         request.session['cart'] = {}
 
@@ -322,15 +330,13 @@ class CheckOut(View):
 
 
 # orders view
-from django.shortcuts import render, redirect
-from django.contrib.auth.hashers import check_password
-# from store.models.customer import Customer
-from django.views import View
 
 
 class OrderView(View):
+    '''handles orders'''
 
     def get(self, request):
+        '''gets Order'''
         customer = request.session.get('customer')
         orders = Order.get_orders_by_customer(customer)
         print(orders)
