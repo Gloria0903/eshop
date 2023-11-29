@@ -29,7 +29,7 @@ urlpatterns = [
     # path('admin/', admin.site.urls),
     path('category/<slug:val>',views.CategoryView.as_view(),name='category'),
     path('registration/',views.CustomerRegistration.as_view(),name='customerregistration'),
-    path('login/', views.customer_login, name='customerlogin'),
+    path('login/', views.CustomerLogin.as_view(), name='customerlogin'),
     path('logout/', views.customer_logout, name='logout'),
 
 ]

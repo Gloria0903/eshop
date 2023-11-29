@@ -1,6 +1,7 @@
 '''views.py file'''
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.hashers import check_password,make_password
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.views import View
@@ -70,9 +71,9 @@ def customer_registration(request):
 def customer_login(request):
     '''customer login'''
     if request.method == 'POST':
-        username = request.POST['username']
+        email = request.POST['email']
         password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
+        user = authenticate(request, email=email, password=password)
         if user is not None:
             login(request, user)
             return redirect('index')
@@ -218,8 +219,8 @@ class CustomerLogin(View):
     return_url = None
 
     def get(self, request):
-        '''customer login'''
-        customer_login.return_url = request.GET.get('return_url')
+        '''loads html'''
+        CustomerLogin.return_url = request.GET.get('return_url')
         return render(request, 'customerlogin.html')
 
     def post(self, request):
@@ -232,19 +233,23 @@ class CustomerLogin(View):
             flag = check_password(password, customer.password)
             if flag:
                 request.session['customer'] = customer.id
-
-                if customer_login.return_url:
+                if CustomerLogin.return_url:
                     return HttpResponseRedirect(customer_login.return_url)
                 else:
-                    customer_login.return_url = None
-                    return redirect('homepage')
+                    CustomerLogin.return_url = None
+                    return redirect('index')
             else:
-                error_message = 'Invalid !!'
+                error_message = 'Invalid password'
         else:
-            error_message = 'Invalid !!'
+            error_message = 'Invalid email'
 
-        print(email, password)
+        if customer:
+            print("Email:", customer.email)  # Check if customer is not None before accessing attributes
+        else:
+            print("Customer not found for email:", email)
+
         return render(request, 'customerlogin.html', {'error': error_message})
+
 
 
 def customer_logout(request):
@@ -265,39 +270,16 @@ class CustomerRegistration(View):
         form = CustomerRegistrationForm(request.POST)
         if form.is_valid():
             # Process valid form data
-            form.save()
+            customer = form.save(commit=False)
+            customer.password = make_password(form.cleaned_data['password1'])
+            # Process valid form data
+            customer.register()
             messages.success(request, 'Registration successful. You can now log in.')
             return redirect('index')
         else:
             messages.error(request, 'Registration failed. Please correct the errors below.')
             # Form is invalid, pass form to template for error display
             return render(request, 'customerregistration.html', {'form': form})
-
-    def validate_customer(self, customer):
-        '''validates customer'''
-        error_message = None
-        # pylint: disable = C0325
-        if (not customer.first_name):
-            error_message = "Please Enter your First Name !!"
-        elif len(customer.first_name) < 3:
-            error_message = 'First Name must be 3 char long or more'
-        elif not customer.last_name:
-            error_message = 'Please Enter your Last Name'
-        elif len(customer.last_name) < 3:
-            error_message = 'Last Name must be 3 char long or more'
-        elif not customer.phone:
-            error_message = 'Enter your Phone Number'
-        elif len(customer.phone) < 10:
-            error_message = 'Phone Number must be 10 char Long'
-        elif len(customer.password) < 5:
-            error_message = 'Password must be 5 char long'
-        elif len(customer.email) < 5:
-            error_message = 'Email must be 5 char long'
-        elif customer.isExists():
-            error_message = 'Email Address Already Registered..'
-        # saving
-
-        return error_message
 
 
 
