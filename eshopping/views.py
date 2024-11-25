@@ -1,9 +1,10 @@
 '''views.py file'''
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password,make_password
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.shortcuts import render, redirect,get_object_or_404
 from django.views import View
+from django_daraja.mpesa.core import MpesaClient
 from eshopping.forms import CustomerRegistrationForm
 from .models import Products, Customer, Category,Order
 # from django.contrib.auth.models import User
@@ -295,3 +296,38 @@ class OrderView(View):
         orders = Order.get_orders_by_customer(customer)
         print(orders)
         return render(request, 'orders.html', {'orders': orders})
+
+def payment(request):
+    """
+    Handles Mpesa payment.
+    e.g http://127.0.0.1:8000/payment/?phone=07########&amount=1&reference=ref123&description=test
+    """
+    cl = MpesaClient()
+
+    # Get credentials from the request (GET or POST depending on your use case)
+    phone_number = request.GET.get('phone')
+    amount_string = request.GET.get('amount')
+    account_reference = request.GET.get('reference')
+    transaction_desc = request.GET.get('description')
+    callback_url = 'https://darajambili.herokuapp.com/express-payment'
+
+    # Validate inputs
+    if not all([phone_number, amount_string, account_reference, transaction_desc]):
+        return JsonResponse({"error": "Missing required parameters"}, status=400)
+
+    try:
+        # Convert amount to integer
+        amount = int(amount_string)
+    except ValueError:
+        return JsonResponse({"error": "Invalid amount. Must be a numeric value."}, status=400)
+
+    # Proceed with Mpesa STK push
+    try:
+        response = cl.stk_push(
+            phone_number, amount,
+            account_reference, transaction_desc,
+            callback_url)
+
+        return HttpResponse(response)
+    except Exception as e:
+        return JsonResponse({"error": f"An error occurred: {str(e)}"}, status=500)
