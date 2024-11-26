@@ -24,7 +24,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name='index'),
     path('shop/', views.shop, name='shop'),
-    path('detail/', views.detail, name='detail'),
+    path('detail/<int:id>/', views.detail, name='detail'),
     path('contact/', views.contact, name='contact'),
     path('checkout/', views.checkout, name='checkout'),
     path('cart/', views.cart, name='cart'),
@@ -33,6 +33,7 @@ urlpatterns = [
     path('registration/',views.CustomerRegistration.as_view(),name='customerregistration'),
     path('login/', views.CustomerLogin.as_view(), name='customerlogin'),
     path('logout/', views.customer_logout, name='logout'),
+    path('payment/',views.payment, name = 'payment'),
 
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS)

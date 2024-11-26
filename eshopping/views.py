@@ -1,9 +1,10 @@
 '''views.py file'''
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password,make_password
-from django.http import HttpResponseRedirect
-from django.shortcuts import render, redirect
+from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
+from django.shortcuts import render, redirect,get_object_or_404
 from django.views import View
+from django_daraja.mpesa.core import MpesaClient
 from eshopping.forms import CustomerRegistrationForm
 from .models import Products, Customer, Category,Order
 # from django.contrib.auth.models import User
@@ -13,17 +14,23 @@ def index(request):
     '''load index.html'''
     #pylint: disable = E1101:no-member
     products = Products.objects.all()
+    for product in products:
+        print(f"Product ID: {product.id}")
     return render(request, 'index.html',{'products': products})
 
 
 def shop(request):
     '''load shop.html'''
-    return render(request, 'shop.html')
+    #pylint: disable = E1101:no-member
+    products = Products.objects.all()
+    return render(request, 'shop.html',{'products': products})
 
-
-def detail(request):
+#pylint: disable = W0622
+def detail(request,id):
     '''load detail.html'''
-    return render(request, 'detail.html')
+    #pylint: disable = E1101
+    product = get_object_or_404(Products, id=id)
+    return render(request, 'detail.html',{'product': product})
 
 
 def contact(request):
@@ -77,37 +84,37 @@ def insert_data(request):
 
         # Update
 
-# pylint: disable = W0622
-def update_data(request, id):
-    '''update the data in db'''
-    if request.method == 'POST':
-        productname = request.POST.get('productname')
-        title = request.POST.get('title')
-        selling_price = request.POST.get('selling_price')
-        discounted_price = request.POST.get('discounted_price')
-        description = request.POST.get('description')
-        composition = request.POST.get('composition')
-        category = request.POST.get('category')
-        product_image = request.POST.get('product_image')
+# # pylint: disable = W0622
+# def update_data(request, id):
+#     '''update the data in db'''
+#     if request.method == 'POST':
+#         productname = request.POST.get('productname')
+#         title = request.POST.get('title')
+#         selling_price = request.POST.get('selling_price')
+#         discounted_price = request.POST.get('discounted_price')
+#         description = request.POST.get('description')
+#         composition = request.POST.get('composition')
+#         category = request.POST.get('category')
+#         product_image = request.POST.get('product_image')
 
-        #pylint: disable = E1101
-        product = Products.objects.get(id=id)
-        product.productname = productname
-        product.title = title
-        product.selling_price = selling_price
-        product.discounted_price = discounted_price
-        product.description = description
-        product.composition = composition
-        product.category = category
-        product.product_image = product_image
-        product.save()
-        return redirect('/')
-    else:
-        # pylint: disable = E1101:no-member
-        p = Products.objects.get(id=id)
-        return render(request, 'category.html', {'p': p})
+#         #pylint: disable = E1101
+#         product = Products.objects.get(id=id)
+#         product.productname = productname
+#         product.title = title
+#         product.selling_price = selling_price
+#         product.discounted_price = discounted_price
+#         product.description = description
+#         product.composition = composition
+#         product.category = category
+#         product.product_image = product_image
+#         product.save()
+#         return redirect('/')
+#     else:
+#         # pylint: disable = E1101:no-member
+#         p = Products.objects.get(id=id)
+#         return render(request, 'category.html', {'p': p})
 
-        # delete
+# delete
 
 # pylint: disable = W0613
 def delete(request, id):
@@ -289,3 +296,38 @@ class OrderView(View):
         orders = Order.get_orders_by_customer(customer)
         print(orders)
         return render(request, 'orders.html', {'orders': orders})
+
+def payment(request):
+    """
+    Handles Mpesa payment.
+    e.g http://127.0.0.1:8000/payment/?phone=07########&amount=1&reference=ref123&description=test
+    """
+    cl = MpesaClient()
+
+    # Get credentials from the request (GET or POST depending on your use case)
+    phone_number = request.GET.get('phone')
+    amount_string = request.GET.get('amount')
+    account_reference = request.GET.get('reference')
+    transaction_desc = request.GET.get('description')
+    callback_url = 'https://darajambili.herokuapp.com/express-payment'
+
+    # Validate inputs
+    if not all([phone_number, amount_string, account_reference, transaction_desc]):
+        return JsonResponse({"error": "Missing required parameters"}, status=400)
+
+    try:
+        # Convert amount to integer
+        amount = int(amount_string)
+    except ValueError:
+        return JsonResponse({"error": "Invalid amount. Must be a numeric value."}, status=400)
+
+    # Proceed with Mpesa STK push
+    try:
+        response = cl.stk_push(
+            phone_number, amount,
+            account_reference, transaction_desc,
+            callback_url)
+
+        return HttpResponse(response)
+    except Exception as e:
+        return JsonResponse({"error": f"An error occurred: {str(e)}"}, status=500)
