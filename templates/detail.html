@@ -134,7 +134,7 @@
                         <div class="navbar-nav mr-auto py-0">
                             <a href="{% url 'index' %}" class="nav-item nav-link">Home</a>
                             <a href="{% url 'shop' %}" class="nav-item nav-link">Shop</a>
-                            <a href="{% url 'detail' %}" class="nav-item nav-link active">Shop Detail</a>
+                            {% comment %} <a href="{% url 'detail' %}" class="nav-item nav-link active">Shop Detail</a> {% endcomment %}
                             <div class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages</a>
                                 <div class="dropdown-menu rounded-0 m-0">
@@ -199,7 +199,7 @@
             </div>
 
             <div class="col-lg-7 pb-5">
-                <h3 class="font-weight-semi-bold">Colorful Stylish Shirt</h3>
+                <h3 class="font-weight-semi-bold"> {{ product.title }} </h3>
                 <div class="d-flex mb-3">
                     <div class="text-primary mr-2">
                         <small class="fas fa-star"></small>
@@ -210,7 +210,7 @@
                     </div>
                     <small class="pt-1">(50 Reviews)</small>
                 </div>
-                <h3 class="font-weight-semi-bold mb-4">ksh2000.00</h3>
+                <h3 class="font-weight-semi-bold mb-4">ksh {{ product.selling_price }} </h3>
                 <p class="mb-4">The first thing that caught my eye was the striking color – it's even more vibrant in person than on the website. The shirt's hue is not only eye-catching but also adds a refreshing touch to my outfits. I opted for this specific shirt, and it turned out to be exactly what I needed to break away from the monotony of my usual wardrobe choices.</p>
                 <div class="d-flex mb-3">
                     <p class="text-dark font-weight-medium mb-0 mr-3">Sizes:</p>
@@ -307,8 +307,7 @@
                 <div class="tab-content">
                     <div class="tab-pane fade show active" id="tab-pane-1">
                         <h4 class="mb-3">Product Description</h4>
-                        <p>Eos no lorem eirmod diam diam, eos elitr et gubergren diam sea. Consetetur vero aliquyam invidunt duo dolores et duo sit. Vero diam ea vero et dolore rebum, dolor rebum eirmod consetetur invidunt sed sed et, lorem duo et eos elitr, sadipscing kasd ipsum rebum diam. Dolore diam stet rebum sed tempor kasd eirmod. Takimata kasd ipsum accusam sadipscing, eos dolores sit no ut diam consetetur duo justo est, sit sanctus diam tempor aliquyam eirmod nonumy rebum dolor accusam, ipsum kasd eos consetetur at sit rebum, diam kasd invidunt tempor lorem, ipsum lorem elitr sanctus eirmod takimata dolor ea invidunt.</p>
-                        <p>Dolore magna est eirmod sanctus dolor, amet diam et eirmod et ipsum. Amet dolore tempor consetetur sed lorem dolor sit lorem tempor. Gubergren amet amet labore sadipscing clita clita diam clita. Sea amet et sed ipsum lorem elitr et, amet et labore voluptua sit rebum. Ea erat sed et diam takimata sed justo. Magna takimata justo et amet magna et.</p>
+                        <p> {{ product.description }} </p>
                     </div>
                     <div class="tab-pane fade" id="tab-pane-2">
                         <h4 class="mb-3">Additional Information</h4>
@@ -328,7 +327,7 @@
                                     <li class="list-group-item px-0">
                                         Takimata ea clita labore amet ipsum erat justo voluptua. Nonumy.
                                     </li>
-                                  </ul> 
+                                </ul>
                             </div>
                             <div class="col-md-6">
                                 <ul class="list-group list-group-flush">
@@ -344,7 +343,7 @@
                                     <li class="list-group-item px-0">
                                         Takimata ea clita labore amet ipsum erat justo voluptua. Nonumy.
                                     </li>
-                                  </ul> 
+                                </ul>
                             </div>
                         </div>
                     </div>
@@ -511,28 +510,6 @@
             </div>
             <div class="col-lg-8 col-md-12">
                 <div class="row">
-                    <div class="col-md-4 mb-5">
-                        <h5 class="font-weight-bold text-dark mb-4">Quick Links</h5>
-                        <div class="d-flex flex-column justify-content-start">
-                            <a class="text-dark mb-2" href="{% url 'index' %}"><i class="fa fa-angle-right mr-2"></i>Home</a>
-                            <a class="text-dark mb-2" href="{% url 'shop' %}"><i class="fa fa-angle-right mr-2"></i>Our Shop</a>
-                            <a class="text-dark mb-2" href="{% url 'detail' %}"><i class="fa fa-angle-right mr-2"></i>Shop Detail</a>
-                            <a class="text-dark mb-2" href="{% url 'cart' %}"><i class="fa fa-angle-right mr-2"></i>Shopping Cart</a>
-                            <a class="text-dark mb-2" href="{% url 'checkout' %}"><i class="fa fa-angle-right mr-2"></i>Checkout</a>
-                            <a class="text-dark" href=""><i class={% url 'contact' %}"fa fa-angle-right mr-2"></i>Contact Us</a>
-                        </div>
-                    </div>
-{#                    <div class="col-md-4 mb-5">#}
-{#                        <h5 class="font-weight-bold text-dark mb-4">Quick Links</h5>#}
-{#                        <div class="d-flex flex-column justify-content-start">#}
-{#                            <a class="text-dark mb-2" href="index.html"><i class="fa fa-angle-right mr-2"></i>Home</a>#}
-{#                            <a class="text-dark mb-2" href="shop.html"><i class="fa fa-angle-right mr-2"></i>Our Shop</a>#}
-{#                            <a class="text-dark mb-2" href="detail.html"><i class="fa fa-angle-right mr-2"></i>Shop Detail</a>#}
-{#                            <a class="text-dark mb-2" href="cart.html"><i class="fa fa-angle-right mr-2"></i>Shopping Cart</a>#}
-{#                            <a class="text-dark mb-2" href="checkout.html"><i class="fa fa-angle-right mr-2"></i>Checkout</a>#}
-{#                            <a class="text-dark" href="contact.html"><i class="fa fa-angle-right mr-2"></i>Contact Us</a>#}
-{#                        </div>#}
-{#                    </div>#}
                     <div class="col-md-4 mb-5">
                         <h5 class="font-weight-bold text-dark mb-4">Newsletter</h5>
                         <form action="">
