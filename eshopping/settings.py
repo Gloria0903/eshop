@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # 'store',
     'django.contrib.sites',
+    'django_daraja',
+
 
 
 
@@ -139,3 +141,12 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     # 'allauth.account.auth_backends.AuthenticationBackend',
 )
+
+# M_PESA_LIVE_URL = 'https://api.safaricom.co.ke/mpesa'  # For live environment
+M_PESA_TEST_URL = 'https://sandbox.safaricom.co.ke/mpesa'  # For testing environment
+
+M_PESA_CONSUMER_KEY = 'q0S9S3QmgwMoRZ3R2vaEWhdffe2ySAyjZTwAXLdMWCzdALPS'
+M_PESA_CONSUMER_SECRET = 'qhAAztwOEx4Euzl5lBLXSzNVy71ICUsBkrUObgwlRNiEhBJNe9pcntY9ANxUbLAz'
+
+# M_PESA_SHORTCODE = 'YOUR_SHORTCODE'
+# M_PESA_PASSKEY = 'YOUR_PASSKEY'

@@ -173,3 +173,20 @@ class Order(models.Model):
         '''gets customer orders'''
         #pylint: disable = E1101
         return Order.objects.filter(customer=customer_id).order_by('-date')
+
+from django.db import models
+class AccessToken(models.Model):
+    app_label = 'django_daraja'  # Replace 'django_daraja' with the actual app name if different
+
+    # Other fields of the AccessToken model
+
+from django.db import models
+
+class MpesaTransaction(models.Model):
+    phone_number = models.CharField(max_length=15)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    transaction_id = models.CharField(max_length=50, unique=True)
+    reference_number = models.CharField(max_length=50)
+    description = models.CharField(max_length=255)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    # Add more fields as needed (e.g., status, error_code, error_message)
