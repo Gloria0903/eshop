@@ -84,9 +84,9 @@ def insert_data(request):
 
         # Update
 
-# # pylint: disable = W0622
+# pylint: disable = W0622
 # def update_data(request, id):
-#     '''update the data in db'''
+#     # '''update the data in db'''
 #     if request.method == 'POST':
 #         productname = request.POST.get('productname')
 #         title = request.POST.get('title')
@@ -96,7 +96,7 @@ def insert_data(request):
 #         composition = request.POST.get('composition')
 #         category = request.POST.get('category')
 #         product_image = request.POST.get('product_image')
-
+#
 #         #pylint: disable = E1101
 #         product = Products.objects.get(id=id)
 #         product.productname = productname
@@ -331,3 +331,5 @@ def payment(request):
         return HttpResponse(response)
     except Exception as e:
         return JsonResponse({"error": f"An error occurred: {str(e)}"}, status=500)
+
+
