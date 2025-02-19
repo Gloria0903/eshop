@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.contrib.auth.hashers import check_password,make_password
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.shortcuts import render, redirect,get_object_or_404
+from django.urls import path
 from django.views import View
 from django_daraja.mpesa.core import MpesaClient
 from eshopping.forms import CustomerRegistrationForm
@@ -333,3 +334,125 @@ def payment(request):
         return JsonResponse({"error": f"An error occurred: {str(e)}"}, status=500)
 
 
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from .models import Product, Cart
+
+@login_required
+def add_to_cart(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    cart_item, created = Cart.objects.get_or_create(
+        user=request.user,
+        product=product,
+        defaults={'quantity': 1}
+    )
+    if not created:
+        cart_item.quantity += 1
+        cart_item.save()
+    return redirect('cart_view')
+
+from django.shortcuts import render
+from .models import Cart
+
+@login_required
+def cart_view(request):
+    cart_items = Cart.objects.filter(user=request.user)
+    total_price = sum(item.total_price() for item in cart_items)
+    return render(request, 'cart.html', {'cart_items': cart_items, 'total_price': total_price})
+
+from django.http import JsonResponse
+
+@login_required
+def update_cart(request, product_id, quantity):
+    cart_item = get_object_or_404(Cart, user=request.user, product_id=product_id)
+    cart_item.quantity = quantity
+    cart_item.save()
+    total_price = sum(item.total_price() for item in Cart.objects.filter(user=request.user))
+    return JsonResponse({'total_price': total_price})
+
+# @login_required
+# def checkout(request):
+#     cart_items = Cart.objects.filter(user=request.user)
+#     total_price = sum(item.total_price() for item in cart_items)
+#     return render(request, 'checkout.html', {'cart_items': cart_items, 'total_price': total_price})
+
+from django.shortcuts import render, redirect
+
+# def signup_view(request):
+#     if request.method == 'POST':
+#         name = request.POST.get('name')
+#         email = request.POST.get('email')
+#         password = request.POST.get('password')
+#
+#         # ... (Your logic to create a new user, validate data, etc.) ...
+#
+#         return redirect('home')  # Example: Redirect to the home page
+#
+#     return render(request, 'customerregistration.html')
+#
+# def login_view(request):
+#     # ... (Your login view logic) ...
+#     return render(request, 'customerlogin.html')
+
+from django.views.generic import TemplateView  # Or other appropriate CBV
+
+class CustomerRegistration(TemplateView):  # Example: Using TemplateView
+    template_name = "customerregistration.html"  # Replace with your template
+
+    # ... (Add form processing or other logic if needed) ...
+
+
+class CustomerLogin(TemplateView):  # Example: Using TemplateView
+    template_name = "customerlogin.html"  # Replace with your template
+
+    # ... (Add authentication logic or other form handling) ...
+
+from django.shortcuts import render, redirect
+from .forms import CustomerRegistrationForm # or however you are handling your form
+
+def customer_registration(request):
+    if request.method == 'POST':
+        form = CustomerRegistrationForm(request.POST) # If using forms
+        if form.is_valid(): # If using forms
+            # Process the form data (e.g., create user)
+            user = form.save() # If using forms
+            return redirect('customerlogin')  # Redirect to login after signup
+        # If form is not valid, fall through to render the form with errors
+    else: # GET request
+        form = CustomerRegistrationForm() # If using forms
+
+    return render(request, 'customerregistration.html', {'form': form})  # Render the form
+
+from django.http import HttpResponse
+
+def test_view(request):
+    if request.method == 'POST':
+        return HttpResponse("Test POST to /registration/ successful!")
+    return HttpResponse("Test GET to /registration/ successful!")
+
+# In urls.py:
+path('registration/', test_view, name='customerregistration'),
+
+
+
+
+# registration and login views below
+
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login
+# ... other imports
+
+def customerlogin(request):
+    # ... your login logic ...
+    if customerlogin():  # If authentication is successful
+        login(request, customerlogin())
+        return redirect('index')  # Redirect to the index page
+    # ...
+
+def customerregistration(request, form=None):
+    # ... your signup logic ...
+     if form.is_valid():
+        user = form.save()
+        login(request, user) # Optional: Log in user immediately after signup
+        return redirect('index')  # Redirect to the index page
+    # ...

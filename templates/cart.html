@@ -177,4 +177,19 @@
     </div>
     <!-- Cart End -->
 
+<script>
+    function updateQuantity(productId, quantity) {
+        fetch(`/update-cart/${productId}/${quantity}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json'
+            }
+        }).then(response => response.json())
+          .then(data => {
+              document.getElementById('total-price').innerText = `Total: $${data.total_price}`;
+          });
+    }
+</script>
+
 {%endblock%}

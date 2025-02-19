@@ -68,7 +68,7 @@ class Products(models.Model):
     category = models.CharField(choices=CATEGORY_CHOICES, max_length=2)
     product_image = models.ImageField(upload_to='product')
 
-    def __str__(self):
+    def _str_(self):
         return f"{self.title}"
 
     @classmethod
@@ -95,7 +95,7 @@ class Category(models.Model):
         #pylint: disable = E1101
         return Category.objects.all()
 
-    def __str__(self):
+    def _str_(self):
         return f"{self.name}"
 
 
@@ -178,7 +178,8 @@ from django.db import models
 class AccessToken(models.Model):
     app_label = 'django_daraja'  # Replace 'django_daraja' with the actual app name if different
 
-    # Other fields of the AccessToken model
+    # Other fields of the AccessToken model
+
 
 from django.db import models
 
@@ -189,4 +190,23 @@ class MpesaTransaction(models.Model):
     reference_number = models.CharField(max_length=50)
     description = models.CharField(max_length=255)
     timestamp = models.DateTimeField(auto_now_add=True)
-    # Add more fields as needed (e.g., status, error_code, error_message)
+    # Add more fields as needed (e.g., status, error_code, error_message)
+
+
+from django.db import models
+
+class Product(models.Model):
+    name = models.CharField(max_length=100)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    description = models.TextField()
+
+    def _str_(self):
+        return self.name
+
+class Cart(models.Model):
+    user = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+
+    def total_price(self):
+        return self.quantity * self.product.price

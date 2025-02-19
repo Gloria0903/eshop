@@ -30,10 +30,23 @@ urlpatterns = [
     path('cart/', views.cart, name='cart'),
     # path('admin/', admin.site.urls),
     path('category/<slug:val>',views.CategoryView.as_view(),name='category'),
-    path('registration/',views.CustomerRegistration.as_view(),name='customerregistration'),
-    path('login/', views.CustomerLogin.as_view(), name='customerlogin'),
+    # path('registration/',views.CustomerRegistration.as_view(),name='customerregistration'),
+    # path('login/', views.CustomerLogin.as_view(), name='customerlogin'),
     path('logout/', views.customer_logout, name='logout'),
     path('payment/',views.payment, name = 'payment'),
+
+    path('registration/', views.CustomerRegistration.as_view(), name='customerregistration'),  # Use .as_view()
+    path('login/', views.CustomerLogin.as_view(), name='customerlogin'),  # Use .as_view()
+
+    # ..from django.urls import path
+    # from . import views
+    #
+    # urlpatterns = [
+    #     path('registration/', views.customer_registration, name='customerregistration'),  # Move this up
+    #     path('login/', views.customer_login, name='customerlogin'),
+    #     # ... other URL patterns (comment these out temporarily)
+    # ]
+
 
 
 ]
@@ -50,4 +63,12 @@ from . import views
 #     path('add-to-cart/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
 #     path('remove-from-cart/<int:product_id>/', views.remove_from_cart, name='remove_from_cart'),
 #     path('cart/', views.view_cart, name='view_cart'),
+# ]
+
+from django.urls import path
+from . import views
+
+# urlpatterns = [
+#     path('add-to-cart/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
+#     path('update-cart/<int:product_id>/<int:quantity>/', views.update_cart, name='update_cart'),
 # ]
