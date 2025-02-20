@@ -70,7 +70,15 @@
     <div class="container">
         <h2>Welcome to Our Shop</h2>
         <h3>Sign Up</h3>
-        <form action="{% url 'customerregistration' %}" method="post">  {% csrf_token %}  <input type="text" name="name" placeholder="Name" required />  <input type="email" name="email" placeholder="Email" required />  <input type="password" name="password" placeholder="Password" required />  <button type="submit">Sign Up</button>
+        {% if errors %}
+            {% for key,value in errors.items %}
+                <p>{{ key }}</p>
+                {% for error in value %}
+                    <p> {{ error }} </p>
+                {% endfor %}
+            {% endfor %}
+        {% endif %}
+        <form action="{% url 'customerregistration' %}" method="post">  {% csrf_token %}  <input type="text" name="first_name" placeholder="First Name" required /> <input type="text" name="last_name" placeholder="Last Name" required />  <input type="email" name="email" placeholder="Email" required />  <input type="password" name="password1" placeholder="Password" required /> <input type="password" name="password2" placeholder="Confirm Password" required />  <button type="submit">Sign Up</button>
         </form>
 {#        <div class="message">#}
 {#            <input type="text" placeholder="Name" required>#}

@@ -8,13 +8,16 @@ from django.views import View
 from django_daraja.mpesa.core import MpesaClient
 from eshopping.forms import CustomerRegistrationForm
 from .models import Products, Customer, Category,Order
-# from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login, logout
 
 
+@login_required(login_url='customerlogin')
 def index(request):
     '''load index.html'''
     #pylint: disable = E1101:no-member
     products = Products.objects.all()
+    print("logged in user: ", request.user.is_authenticated)
     for product in products:
         print(f"Product ID: {product.id}")
     return render(request, 'index.html',{'products': products})
@@ -158,7 +161,7 @@ class Index(View):
 
     def get(self, request):
         '''gets cart'''
-        # print()
+        print("logged in user: ", request.user)
         return HttpResponseRedirect(f'/store{request.get_full_path()[1:]}')
 
 
@@ -230,31 +233,6 @@ def customer_logout(request):
     '''logouts customer out the system'''
     request.session.clear()
     return redirect('login')
-
-
-# signup view
-class CustomerRegistration(View):
-    '''register customer'''
-    def get(self, request):
-        '''loads register html file'''
-        return render(request, 'customerregistration.html')
-
-    def post(self, request):
-        '''create customer'''
-        form = CustomerRegistrationForm(request.POST)
-        if form.is_valid():
-            # Process valid form data
-            customer = form.save(commit=False)
-            customer.password = make_password(form.cleaned_data['password1'])
-            # Process valid form data
-            customer.register()
-            messages.success(request, 'Registration successful. You can now log in.')
-            return redirect('index')
-        else:
-            messages.error(request, 'Registration failed. Please correct the errors below.')
-            # Form is invalid, pass form to template for error display
-            return render(request, 'customerregistration.html', {'form': form})
-
 
 
 
@@ -396,10 +374,24 @@ from django.shortcuts import render, redirect
 
 from django.views.generic import TemplateView  # Or other appropriate CBV
 
-class CustomerRegistration(TemplateView):  # Example: Using TemplateView
-    template_name = "customerregistration.html"  # Replace with your template
+class CustomerRegistration(View):
+    template_name = "customerregistration.html"
+    def get(self, request):
+        '''loads register html file'''
+        return render(request, 'customerregistration.html')
 
-    # ... (Add form processing or other logic if needed) ...
+    def post (self, request):
+        form = CustomerRegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            authenticate(request, email=request.POST.get("email"), password=request.POST.get("password"))
+            return redirect("index")
+        print(form.errors)
+        return render(request, self.template_name, {'errors':form.errors})
+
+
+
+    # ... Add form processing or other logic if needed) ...
 
 
 class CustomerLogin(TemplateView):  # Example: Using TemplateView

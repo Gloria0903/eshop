@@ -9,30 +9,25 @@ from django.contrib.auth.models import PermissionsMixin
 
 class CustomerManager(BaseUserManager):
     '''my manager'''
-    def create_user(self,email, username, password):
+    def create_user(self,email, password):
         '''create normal user'''
         if not email:
             raise  ValueError('user must have an email address.')
-        if not username:
-            raise  ValueError('user must have a username.')
         user =self.model(
             email=self.normalize_email(email),
-            username=username,
         )
         user.set_password(password)
 
         user.save(using=self._db)
         return user
 
-    def create_superuser(self,email,username,password):
+    def create_superuser(self,email, password):
         '''create super user: admin'''
         user = self.create_user(
             email = self.normalize_email(email),
-            username=username,
             password=password,
         )
 
-        user.is_admin = True
         user.is_staff = True
         user.is_superuser = True
         user.save(using=self._db)
@@ -105,20 +100,16 @@ class Category(models.Model):
 
 class Customer(AbstractUser,PermissionsMixin):
     '''Customer model'''
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    username = models.CharField(max_length=150, unique=True, default=first_name)
     phone = models.CharField(max_length=10)
     email = models.EmailField(unique=True)
-    password = models.CharField(max_length=100)
-    is_admin = models.BooleanField(default=False)
+    username = None
 
     objects = CustomerManager()
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
+
 
     def has_perm(self, perm, obj=None):
-        return self.is_admin
+        return True
 
     def has_module_perms(self, app_label):
         return True

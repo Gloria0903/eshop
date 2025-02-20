@@ -146,10 +146,15 @@
 {#                            </div>#}
                             <a href="{% url 'contact' %}" class="nav-item nav-link">Contact</a>
                         </div>
-                        <div class="navbar-nav ml-auto py-0">
+                       <div class="navbar-nav ml-auto py-0">
+                        {% if request.user.is_authenticated %}
+                            <a href="{% url 'logout' %}" class="nav-item nav-link">Logout</a>
+{#                            <a href="{% url 'profile' %}" class="nav-item nav-link">Profile</a>#}
+                            {% else %}
                             <a href="{% url 'customerlogin' %}" class="nav-item nav-link">Login</a>
                             <a href="{% url 'customerregistration' %}" class="nav-item nav-link">Register</a>
-                        </div>
+                        {% endif %}
+                    </div>
                     </div>
                 </nav>
                 
