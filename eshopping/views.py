@@ -10,6 +10,11 @@ from eshopping.forms import CustomerRegistrationForm
 from .models import Products, Customer, Category,Order
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
+from django.shortcuts import render, redirect
+from .forms import CustomerRegistrationForm # or however you are handling your form
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from .models import Product, Cart
 
 
 @login_required(login_url='customerlogin')
@@ -86,39 +91,7 @@ def insert_data(request):
     else:
         return render(request, 'index.html')
 
-        # Update
 
-# pylint: disable = W0622
-# def update_data(request, id):
-#     # '''update the data in db'''
-#     if request.method == 'POST':
-#         productname = request.POST.get('productname')
-#         title = request.POST.get('title')
-#         selling_price = request.POST.get('selling_price')
-#         discounted_price = request.POST.get('discounted_price')
-#         description = request.POST.get('description')
-#         composition = request.POST.get('composition')
-#         category = request.POST.get('category')
-#         product_image = request.POST.get('product_image')
-#
-#         #pylint: disable = E1101
-#         product = Products.objects.get(id=id)
-#         product.productname = productname
-#         product.title = title
-#         product.selling_price = selling_price
-#         product.discounted_price = discounted_price
-#         product.description = description
-#         product.composition = composition
-#         product.category = category
-#         product.product_image = product_image
-#         product.save()
-#         return redirect('/')
-#     else:
-#         # pylint: disable = E1101:no-member
-#         p = Products.objects.get(id=id)
-#         return render(request, 'category.html', {'p': p})
-
-# delete
 
 # pylint: disable = W0613
 def delete(request, id):
@@ -311,11 +284,6 @@ def payment(request):
     except Exception as e:
         return JsonResponse({"error": f"An error occurred: {str(e)}"}, status=500)
 
-
-from django.shortcuts import get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
-from .models import Product, Cart
-
 @login_required
 def add_to_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
@@ -348,29 +316,7 @@ def update_cart(request, product_id, quantity):
     total_price = sum(item.total_price() for item in Cart.objects.filter(user=request.user))
     return JsonResponse({'total_price': total_price})
 
-# @login_required
-# def checkout(request):
-#     cart_items = Cart.objects.filter(user=request.user)
-#     total_price = sum(item.total_price() for item in cart_items)
-#     return render(request, 'checkout.html', {'cart_items': cart_items, 'total_price': total_price})
 
-from django.shortcuts import render, redirect
-
-# def signup_view(request):
-#     if request.method == 'POST':
-#         name = request.POST.get('name')
-#         email = request.POST.get('email')
-#         password = request.POST.get('password')
-#
-#         # ... (Your logic to create a new user, validate data, etc.) ...
-#
-#         return redirect('home')  # Example: Redirect to the home page
-#
-#     return render(request, 'customerregistration.html')
-#
-# def login_view(request):
-#     # ... (Your login view logic) ...
-#     return render(request, 'customerlogin.html')
 
 from django.views.generic import TemplateView  # Or other appropriate CBV
 
@@ -399,8 +345,7 @@ class CustomerLogin(TemplateView):  # Example: Using TemplateView
 
     # ... (Add authentication logic or other form handling) ...
 
-from django.shortcuts import render, redirect
-from .forms import CustomerRegistrationForm # or however you are handling your form
+
 
 def customer_registration(request):
     if request.method == 'POST':
