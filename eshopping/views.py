@@ -16,6 +16,68 @@ from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Product, Cart
 
+# Register
+class CustomerRegistration(View):
+    template_name = "customerregistration.html"
+
+    def get(self, request):
+        '''loads register html file'''
+        return render(request, 'customerregistration.html')
+
+    def post(self, request):
+        form = CustomerRegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            email = form.cleaned_data.get('email')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(request, email=email, password=raw_password)
+            if user is not None:
+                login(request, user)
+                return redirect("index")
+        import json
+        errors = json.loads(form.errors.as_json())
+        for msg in errors:
+            messages.error(request, f"{msg}: {errors[msg][0]['message']}")
+        return render(request, self.template_name, {'form': form})
+
+# Login
+class CustomerLogin(View):
+    '''customer login'''
+    def get(self, request):
+        '''loads html'''
+        user = request.user
+        return_url = request.GET.get('next')
+        if user.is_authenticated:
+            if return_url is not None:
+                return HttpResponseRedirect(return_url)
+            return redirect('index')
+        return render(request, 'customerlogin.html', {'return_url': return_url})
+
+    def post(self, request):
+        '''customer login'''
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        user = authenticate(request, email=email, password=password)
+        if user is not None:
+            login(request, user)
+            messages.success(request, 'Logged in successfully')
+            return_url = request.POST.get('return_url')
+            print("return_url: ", return_url)
+            if return_url is not None:
+                return HttpResponseRedirect(return_url)
+            return redirect('index')
+        else:
+            error_message = 'Email or Password is invalid'
+            messages.error(request, error_message)
+        return render(request, 'customerlogin.html', {'error': error_message})
+
+
+# Logout
+def customer_logout(request):
+    '''logouts customer out the system'''
+    request.session.clear()
+    return redirect('customerlogin')
+
 
 @login_required(login_url='customerlogin')
 def index(request):
@@ -34,12 +96,17 @@ def shop(request):
     products = Products.objects.all()
     return render(request, 'shop.html',{'products': products})
 
-#pylint: disable = W0622
-def detail(request,id):
+# @login_required(login_url='customerlogin')
+def detail(request, id):
     '''load detail.html'''
-    #pylint: disable = E1101
     product = get_object_or_404(Products, id=id)
-    return render(request, 'detail.html',{'product': product})
+    if request.method == 'POST':
+        qty = int(request.POST.get('quantity'))
+        user_id = 1
+        user = get_object_or_404(Customer, id=user_id)
+        Cart.objects.create(user=user, product=product, quantity=qty)
+        return redirect('cart')
+    return render(request, 'detail.html', {'product': product})
 
 
 def contact(request):
@@ -52,10 +119,35 @@ def checkout(request):
     return render(request, 'checkout.html')
 
 
+@login_required(login_url='customerlogin')
 def cart(request):
     '''load cart.html'''
-    return render(request, 'cart.html')
+    cartItems = Cart.objects.filter(user_id=1)
+    subtotals = 0
+    for item in cartItems:
+        subtotals += item.total_price()
+    return render(request, 'cart.html', {'cartItems': cartItems, 'subtotals': subtotals})
 
+def delete_cart_item(request, cart_id):
+    '''delete cart item'''
+    cartItem = get_object_or_404(Cart, id=cart_id)
+    cartItem.delete()
+    return redirect('cart')
+
+def update_cart_qty(request, cart_id):
+    '''update cart item'''
+    if request.method == 'GET':
+        cartItem = get_object_or_404(Cart, id=cart_id)
+        qty = int(request.GET.get('quantity'))
+        if (qty > 0):
+            cartItem.quantity = qty
+            cartItem.save()
+            messages.success(request, 'Cart updated successfully')
+        else:
+            cartItem.delete()
+        return redirect('cart')
+    
+    return redirect('cart')
 # pylint: disable = W0613
 def get(request, val):
     '''load category.html'''
@@ -158,54 +250,6 @@ def store(request):
 
     print('you are : ', request.session.get('email'))
     return render(request, 'index.html', data)
-
-
-# login/logout view
-
-
-class CustomerLogin(View):
-    '''customer login'''
-    return_url = None
-
-    def get(self, request):
-        '''loads html'''
-        CustomerLogin.return_url = request.GET.get('return_url')
-        return render(request, 'customerlogin.html')
-
-    def post(self, request):
-        '''customer login'''
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-        customer = Customer.get_customer_by_email(email)
-        error_message = None
-        if customer:
-            flag = check_password(password, customer.password)
-            if flag:
-                request.session['customer'] = customer.id
-                if CustomerLogin.return_url:
-                    return HttpResponseRedirect(CustomerLogin.return_url)
-                else:
-                    CustomerLogin.return_url = None
-                    return redirect('index')
-            else:
-                error_message = 'Invalid password'
-        else:
-            error_message = 'Invalid email'
-
-        if customer:
-            # Check if customer is not None before accessing attributes
-            print("Email:", customer.email)
-        else:
-            print("Customer not found for email:", email)
-
-        return render(request, 'customerlogin.html', {'error': error_message})
-
-
-
-def customer_logout(request):
-    '''logouts customer out the system'''
-    request.session.clear()
-    return redirect('login')
 
 
 
@@ -315,81 +359,3 @@ def update_cart(request, product_id, quantity):
     cart_item.save()
     total_price = sum(item.total_price() for item in Cart.objects.filter(user=request.user))
     return JsonResponse({'total_price': total_price})
-
-
-
-from django.views.generic import TemplateView  # Or other appropriate CBV
-
-class CustomerRegistration(View):
-    template_name = "customerregistration.html"
-    def get(self, request):
-        '''loads register html file'''
-        return render(request, 'customerregistration.html')
-
-    def post (self, request):
-        form = CustomerRegistrationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            authenticate(request, email=request.POST.get("email"), password=request.POST.get("password"))
-            return redirect("index")
-        print(form.errors)
-        return render(request, self.template_name, {'errors':form.errors})
-
-
-
-    # ... Add form processing or other logic if needed) ...
-
-
-class CustomerLogin(TemplateView):  # Example: Using TemplateView
-    template_name = "customerlogin.html"  # Replace with your template
-
-    # ... (Add authentication logic or other form handling) ...
-
-
-
-def customer_registration(request):
-    if request.method == 'POST':
-        form = CustomerRegistrationForm(request.POST) # If using forms
-        if form.is_valid(): # If using forms
-            # Process the form data (e.g., create user)
-            user = form.save() # If using forms
-            return redirect('customerlogin')  # Redirect to login after signup
-        # If form is not valid, fall through to render the form with errors
-    else: # GET request
-        form = CustomerRegistrationForm() # If using forms
-
-    return render(request, 'customerregistration.html', {'form': form})  # Render the form
-
-from django.http import HttpResponse
-
-def test_view(request):
-    if request.method == 'POST':
-        return HttpResponse("Test POST to /registration/ successful!")
-    return HttpResponse("Test GET to /registration/ successful!")
-
-# In urls.py:
-path('registration/', test_view, name='customerregistration'),
-
-
-
-
-# registration and login views below
-
-from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
-# ... other imports
-
-def customerlogin(request):
-    # ... your login logic ...
-    if customerlogin():  # If authentication is successful
-        login(request, customerlogin())
-        return redirect('index')  # Redirect to the index page
-    # ...
-
-def customerregistration(request, form=None):
-    # ... your signup logic ...
-     if form.is_valid():
-        user = form.save()
-        login(request, user) # Optional: Log in user immediately after signup
-        return redirect('index')  # Redirect to the index page
-    # ...

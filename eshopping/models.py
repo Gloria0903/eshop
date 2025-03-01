@@ -98,7 +98,7 @@ class Category(models.Model):
 
 
 
-class Customer(AbstractUser,PermissionsMixin):
+class Customer(AbstractUser, PermissionsMixin):
     '''Customer model'''
     phone = models.CharField(max_length=10)
     email = models.EmailField(unique=True)
@@ -106,6 +106,8 @@ class Customer(AbstractUser,PermissionsMixin):
 
     objects = CustomerManager()
     USERNAME_FIELD = 'email'
+
+    REQUIRED_FIELDS = []
 
 
     def has_perm(self, perm, obj=None):
@@ -196,8 +198,8 @@ class Product(models.Model):
 
 class Cart(models.Model):
     user = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(Products, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
 
     def total_price(self):
-        return self.quantity * self.product.price
+        return self.quantity * self.product.selling_price

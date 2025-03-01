@@ -1,82 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Online Clothing Shop</title>
-    <style>
-        body {
-            font-family: sans-serif;
-            background-color: #f8e0ff; /* Faded pink background */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-
-        .container {
-            background-color: white;
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 350px; /* Adjust width as needed */
-        }
-
-        h2 {
-            color: #c98c94; /* Pink heading */
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        h3 {
-            color: #c98c94; /* Pink sub-heading */
-            margin-bottom: 15px;
-        }
-
-        input[type="email"],
-        input[type="password"] {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box; /* Prevents padding from affecting width */
-        }
-
-        button {
-            background-color: #c98c94; /* Pink button */
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            width: 100%;
-        }
-
-        a {
-            color: #c98c94; /* Pink link */
-            text-decoration: none;
-        }
-
-        .message {
-            margin-top: 15px;
-            text-align: center;
-        }
-
-        .error-message { /* Style for error messages (if any) */
-            color: red;
-            margin-top: 10px;
-            text-align: center;
-        }
-    </style>
-</head>
-<body>
-
-    <div class="container">
+{% extends 'auth_base.html' %}
+{% block title %}
+<title>Chic Wears - Login</title>
+{% endblock %}
+{% block body %}
+<div class="container">
         <h2>Welcome to Our Shop</h2>
         <h3>Login</h3>
         <form action="{% url 'customerlogin' %}" method="post">
             {% csrf_token %}
+            <input type="hidden" name="return_url" value="{{ return_url }}">
             <input type="email" name="email" placeholder="Email" required>
             <input type="password" name="password" placeholder="Password" required>
             <button type="submit">Login</button>
@@ -86,6 +18,4 @@
             Don't have an account? <a href="{% url 'customerregistration' %}">Sign Up</a>
         </div>
     </div>
-
-</body>
-</html>
+{% endblock %}

@@ -52,6 +52,8 @@ INSTALLED_APPS = [
 
 ]
 
+AUTH_USER_MODEL = 'eshopping.Customer'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -94,7 +96,7 @@ DATABASES = {
     # }
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'eshopping',
+        'NAME': 'eshop',
         'USER': 'root',
         'PASSWORD': '',
         'HOST': 'localhost',
