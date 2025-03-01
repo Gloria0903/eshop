@@ -359,3 +359,9 @@ def update_cart(request, product_id, quantity):
     cart_item.save()
     total_price = sum(item.total_price() for item in Cart.objects.filter(user=request.user))
     return JsonResponse({'total_price': total_price})
+
+
+# admin
+def admin_dashboard(request):
+    '''load admin dashboard'''
+    return render(request, 'admin/base_layout.html')

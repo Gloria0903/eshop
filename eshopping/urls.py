@@ -21,7 +21,7 @@ from django.conf.urls.static import static
 from . import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    # path('admin/', admin.site.urls),
     path('register/', views.CustomerRegistration.as_view(),
          name='customerregistration'),
     path('login/', views.CustomerLogin.as_view(), name='customerlogin'),
@@ -37,6 +37,7 @@ urlpatterns = [
     path('category/<slug:val>',views.CategoryView.as_view(),name='category'),
     path('logout/', views.customer_logout, name='logout'),
     path('payment/',views.payment, name = 'payment'),
+    path('admin/',views.admin_dashboard, name = 'admin_dashboard'),
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

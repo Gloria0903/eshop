@@ -1,0 +1,76 @@
+:root {
+    --primary-color: #c17a74;
+    --secondary-color: #edf1ff;
+    --background-color: #ffffff;
+    --text-color: #1c1c23;
+    --dark-text-color: #1c1c1c;
+}
+
+a, li, p, h1, h2, h3, h4, h5, h6{
+    color: var(--text-color);
+}
+
+button {
+    background-color: var(--primary-color);
+    color: var(--dark-text-color);
+    border: 1px solid var(--primary-color);
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+body {
+    display: flex;
+}
+
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    overflow-y: auto;
+    position: fixed;
+    border-right: 1px solid var(--secondary-color);
+}
+
+.sidebar a {
+    text-decoration: none;
+    padding: 15px;
+    display: block;
+    border: 1px solid var(--secondary-color);
+    border-right: none;
+    border-left: none;
+    border-bottom: none;
+    color: var(--text-color);
+}
+
+.sidebar a:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.sidebar a:hover p{
+    color: var(--background-color);
+}
+
+.sidebar a.active {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+
+.main-content {
+    margin-left: 250px;
+    flex-grow: 1;
+    padding: 20px;
+}
+
+.topbar {
+    position: fixed;
+    top: 0;
+    left: 250px;
+    right: 0;
+    background-color: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
