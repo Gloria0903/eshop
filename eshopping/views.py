@@ -14,6 +14,7 @@ from django.shortcuts import render, redirect
 from .forms import CustomerRegistrationForm # or however you are handling your form
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from .decorators import admin_required
 from .models import Product, Cart
 
 # Register
@@ -362,6 +363,7 @@ def update_cart(request, product_id, quantity):
 
 
 # admin
+@admin_required
 def admin_dashboard(request):
     '''load admin dashboard'''
     return render(request, 'admin/base_layout.html')
