@@ -7,7 +7,7 @@ from django.urls import path
 from django.views import View
 from django_daraja.mpesa.core import MpesaClient
 from eshopping.forms import CustomerRegistrationForm
-from .models import Products, Customer, Category,Order
+from .models import Product, Customer, Category,Order
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
@@ -83,7 +83,7 @@ def customer_logout(request):
 def index(request):
     '''load index.html'''
     #pylint: disable = E1101:no-member
-    products = Products.objects.all()
+    products = Product.objects.all()
     print("logged in user: ", request.user.is_authenticated)
     for product in products:
         print(f"Product ID: {product.id}")
@@ -93,13 +93,13 @@ def index(request):
 def shop(request):
     '''load shop.html'''
     #pylint: disable = E1101:no-member
-    products = Products.objects.all()
+    products = Product.objects.all()
     return render(request, 'shop.html',{'products': products})
 
 # @login_required(login_url='customerlogin')
 def detail(request, id):
     '''load detail.html'''
-    product = get_object_or_404(Products, id=id)
+    product = get_object_or_404(Product, id=id)
     if request.method == 'POST':
         qty = int(request.POST.get('quantity'))
         user_id = 1
@@ -172,7 +172,7 @@ def insert_data(request):
         composition = request.POST.get('composition')
         category = request.POST.get('category')
         product_image = request.POST.get('product_image')
-        create_product = Products(productname=product_name, title=title,
+        create_product = Product(productname=product_name, title=title,
                         selling_price=selling_price,
                         discounted_price=discounted_price, description=description,
                         composition=composition,
@@ -189,7 +189,7 @@ def insert_data(request):
 def delete(request, id):
     '''load delete product'''
     #pylint: disable= E1101
-    p = Products.objects.get(id=id)
+    p = Product.objects.get(id=id)
     p.delete()
     return redirect('/')
 
@@ -240,9 +240,9 @@ def store(request):
     categories = Category.get_all_categories()
     category_id = request.GET.get('category')
     if category_id:
-        products = Products.get_all_products_by_category_id(category_id)
+        products = Product.get_all_products_by_category_id(category_id)
     else:
-        products = Products.get_all_products()
+        products = Product.get_all_products()
 
     data = {}
     data['products'] = products
@@ -263,7 +263,7 @@ class CheckOut(View):
         # pylint: disable = W0621
         cart = request.session.get('cart')
         #pylint: disable = E1101
-        products = Products.get_products_by_id(list(cart.keys()))
+        products = Product.get_products_by_id(list(cart.keys()))
         print(address, phone, customer, cart, products)
 
         for product in products:

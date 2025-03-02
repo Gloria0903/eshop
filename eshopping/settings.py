@@ -96,7 +96,7 @@ DATABASES = {
     # }
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'eshop',
+        'NAME': 'eshopping',
         'USER': 'root',
         'PASSWORD': '',
         'HOST': 'localhost',
