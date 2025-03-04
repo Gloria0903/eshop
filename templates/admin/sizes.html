@@ -1,21 +1,21 @@
 {% extends 'admin/base_layout.html' %} {% block title %}
-<title>Categories</title>
+<title>Sizes</title>
 {% endblock %} {% block body %}
 <div class="d-flex gap-2">
   <form method="post" enctype="multipart/form-data" class="w-50">
     {% csrf_token %}
     {% if type == 'delete' %}
-      <p>Are you sure you want to delete category <span class="text-danger">{{category.name}}</span>?</p>
+      <p>Are you sure you want to delete size <span class="text-danger">{{size.name}}</span>?</p>
       <div class="d-flex justify-content-between gap-4 align-items-center">
-        <a href="{% url 'admin_categories' %}" class="btn btn-secondary p-2 w-100">Cancel</a>
+        <a href="{% url 'size_listing' %}" class="btn btn-secondary p-2 w-100">Cancel</a>
         <button type="submit" class="text-white p-2 w-100">Delete</button>
       </div>
     {% else %}
       <h4 class="h4">
         {% if type == 'edit' %}
-          Edit Category
+          Edit Size
         {% else %}
-          Categories
+          Sizes
         {% endif %}
       </h4>
       {{form.as_p }}
@@ -26,20 +26,20 @@
     <thead>
       <tr>
         <th scope="col">#</th>
-        <th scope="col">Category Name</th>
+        <th scope="col">Size Name</th>
         <th scope="col" class="text-center">Actions</th>
       </tr>
     </thead>
     <tbody>
-      {% for category in categories %}
+      {% for size in sizes %}
       <tr>
-        <th scope="row">{{category.id}}</th>
-        <td>{{ category.name }}</td>
-        <td class="d-flex gap-3 justify-content-center">
-          <a href="{% url 'edit_category' id=category.id %}" class="">
+        <th scope="row">{{size.id}}</th>
+        <td>{{ size.name }}</td>
+        <td class="text-center">
+          <a href="{% url 'edit_size' id=size.id %}" class="me-3">
             <i class="fa-solid fa-pen-to-square text-success"></i>
           </a>
-          <a href="{% url 'delete_category' id=category.id %}">
+          <a href="{% url 'delete_size' id=size.id %}">
             <i class="fa-solid fa-trash-can text-danger"></i>
           </a>
         </td>

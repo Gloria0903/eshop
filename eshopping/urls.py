@@ -39,10 +39,14 @@ urlpatterns = [
     path('payment/',views.payment, name = 'payment'),
     path('admin/',views.admin_dashboard, name = 'admin_dashboard'),
     path('admin/products/create/', views.create_product, name='admin_create_product'),
-    path('admin/categories/create/', views.create_category, name='admin_categories'),
+    path('admin/categories/', views.create_category, name='admin_categories'),
     path('admin/categories/<int:id>/edit', views.edit_category, name='edit_category'),
     path('admin/categories/<int:id>/delete', views.delete_category, name='delete_category'),
-    path('admin/sizes/create/', views.create_size, name='admin_create_size'),
+    path('admin/sizes/', views.create_size, name='size_listing'),
+    path('admin/sizes/<int:id>/edit',
+         views.edit_size, name='edit_size'),
+    path('admin/sizes/<int:id>/delete',
+         views.delete_size, name='delete_size'),
     path('admin/colors/create/', views.create_color, name='admin_create_color'),
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS)

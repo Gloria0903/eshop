@@ -420,15 +420,48 @@ def delete_category(request, id):
         return render(request, 'admin/categories.html', {'form': form, 'categories': categories, 'category': category, 'type': 'delete'})
 
 
+@admin_required
 def create_size(request):
     if request.method == 'POST':
         form = SizeForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('admin_size_list') 
+            return redirect('size_listing')
     else:
         form = SizeForm()
-    return render(request, 'admin/create_size.html', {'form': form})
+        sizes = Size.objects.all()
+    return render(request, 'admin/sizes.html', {'form': form, 'sizes': sizes})
+
+
+@admin_required
+def edit_size(request, id):
+    size = get_object_or_404(Size, id=id)
+    sizes = Size.objects.all()
+    if request.method == 'POST':
+        form = SizeForm(request.POST, instance=size)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Size updated successfully')
+            return redirect('size_listing')
+        else:
+            messages.error(request, 'Size update failed')
+            return render(request, 'admin/sizes.html', {'form': form, 'sizes': sizes, 'type': 'edit'})
+    else:
+        form = SizeForm(instance=size)
+        return render(request, 'admin/sizes.html', {'form': form, 'sizes': sizes, 'type': 'edit'})
+
+
+@admin_required
+def delete_size(request, id):
+    size = get_object_or_404(Size, id=id)
+    sizes = Size.objects.all()
+    if request.method == 'POST':
+        size.delete()
+        messages.success(request, 'Size deleted successfully')
+        return redirect('size_listing')
+    else:
+        form = SizeForm(instance=size)
+        return render(request, 'admin/sizes.html', {'form': form, 'sizes': sizes, 'size': size, 'type': 'delete'})
 
 
 def create_color(request):
