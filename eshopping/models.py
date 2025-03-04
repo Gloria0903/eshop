@@ -152,8 +152,8 @@ class Product(models.Model):
     sizes = models.ManyToManyField(Size, through=ProductSizeColor, blank=True)
     colors = models.ManyToManyField(Color, through=ProductSizeColor, blank=True)
 
-    def __str__(self):
-        return f"{self.title}"
+    # def __str__(self):
+    #     return f"{self.title}"
 
 
 class Cart(models.Model):

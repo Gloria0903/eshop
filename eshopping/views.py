@@ -514,10 +514,43 @@ def create_product(request):
         if product_form.is_valid():
             product_form.save()
             messages.success(request, 'Product created successfully')
-        return redirect('admin_dashboard')
+        return redirect('admin_products')
     else:
         product_form = ProductForm()
 
-    return render(request, 'admin/create_product.html', {
+    return render(request, 'admin/product_form.html', {
         'form': product_form,
     })
+
+
+@admin_required
+def list_admin_products(request):
+    products = Product.objects.all().order_by('-id')
+    products_count = products.count()
+    return render(request, 'admin/products.html', {'products': products, 'products_count': products_count})
+
+@admin_required
+def edit_product(request, id):
+    product = get_object_or_404(Product, id=id)
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES, instance=product)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Product updated successfully')
+            return redirect('admin_products')
+        else:
+            messages.error(request, 'Product update failed')
+            return render(request, 'admin/product_form.html', {'form': form, 'type': 'edit'})
+    else:
+        form = ProductForm(instance=product)
+        return render(request, 'admin/product_form.html', {'form': form, 'type': 'edit'})
+
+@admin_required
+def delete_product(request, id):
+    product = get_object_or_404(Product, id=id)
+    if request.method == 'POST':
+        product.delete()
+        messages.success(request, 'Product deleted successfully')
+        return redirect('admin_products')
+    else:
+        return render(request, 'admin/product_form.html', {'product': product, 'type': 'delete'})
