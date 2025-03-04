@@ -1,4 +1,6 @@
 '''views.py file'''
+from .forms import ProductForm, CategoryForm, SizeForm, ColorForm
+from .models import Product, Category, Size, Color
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password,make_password
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
@@ -62,11 +64,17 @@ class CustomerLogin(View):
         if user is not None:
             login(request, user)
             messages.success(request, 'Logged in successfully')
-            return_url = request.POST.get('return_url')
-            print("return_url: ", return_url)
-            if return_url is not None:
+            return_url = request.POST.get('return_url', None)
+            if return_url and return_url != 'None':
+                print("Redirecting to next: ", return_url)
                 return HttpResponseRedirect(return_url)
-            return redirect('index')
+            else: 
+                if user.is_superuser:
+                    print("Redirecting to admin")
+                    return redirect('admin_dashboard')
+                else: 
+                    print("Redirecting to home")
+                    return redirect('index')
         else:
             error_message = 'Email or Password is invalid'
             messages.error(request, error_message)
@@ -367,3 +375,84 @@ def update_cart(request, product_id, quantity):
 def admin_dashboard(request):
     '''load admin dashboard'''
     return render(request, 'admin/base_layout.html')
+
+@admin_required
+def create_category(request):
+    if request.method == 'POST':
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            # Redirect to a category list view
+            return redirect('admin_categories')
+    else:
+        form = CategoryForm()
+        categories = Category.objects.all()
+    return render(request, 'admin/categories.html', {'form': form, 'categories': categories})
+
+
+@admin_required
+def edit_category(request, id):
+    category = get_object_or_404(Category, id=id)
+    categories = Category.objects.all()
+    if request.method == 'POST':
+        form = CategoryForm(request.POST, instance=category)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Category updated successfully')
+            return redirect('admin_categories')
+        else:
+            messages.error(request, 'Category update failed')
+            return render(request, 'admin/categories.html', {'form': form, 'categories': categories, 'type': 'edit'})
+    else:
+        form = CategoryForm(instance=category)
+        return render(request, 'admin/categories.html', {'form': form, 'categories': categories, 'type': 'edit'})
+    
+@admin_required
+def delete_category(request, id):
+    category = get_object_or_404(Category, id=id)
+    categories = Category.objects.all()
+    if request.method == 'POST':
+        category.delete()
+        messages.success(request, 'Category deleted successfully')
+        return redirect('admin_categories')
+    else:
+        form = CategoryForm(instance=category)
+        return render(request, 'admin/categories.html', {'form': form, 'categories': categories, 'category': category, 'type': 'delete'})
+
+
+def create_size(request):
+    if request.method == 'POST':
+        form = SizeForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('admin_size_list') 
+    else:
+        form = SizeForm()
+    return render(request, 'admin/create_size.html', {'form': form})
+
+
+def create_color(request):
+    if request.method == 'POST':
+        form = ColorForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('admin_color_list')  # Redirect to a color list view
+    else:
+        form = ColorForm()
+    return render(request, 'admin/create_color.html', {'form': form})
+
+
+@admin_required
+def create_product(request):
+    if request.method == 'POST':
+        product_form = ProductForm(request.POST, request.FILES)
+        if product_form.is_valid():
+            product_form.save()
+            messages.success(request, 'Product created successfully')
+        return redirect('admin_dashboard')
+    else:
+        product_form = ProductForm()
+
+    return render(request, 'admin/create_product.html', {
+        'form': product_form,
+    })

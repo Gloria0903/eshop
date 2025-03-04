@@ -24,15 +24,15 @@
         <i class="fas fa-bars"></i>
          </button>
       </div>
-      <a href="#" id="menu-toggle" class="d-flex align-items-center gap-2">
+      <a href="{% url 'admin_dashboard' %}" id="menu-toggle" class="d-flex align-items-center gap-2">
         <i class="fa-solid fa-house"></i>
         <p class="my-auto">Dashboard</p>
       </a>
-      <a href="#" id="menu-toggle" class="d-flex align-items-center gap-2">
+      <a href="{% url 'admin_create_product' %}" id="menu-toggle" class="d-flex align-items-center gap-2">
         <i class="fa-solid fa-basket-shopping"></i>
         <p class="my-auto">Products</p>
       </a>
-      <a href="#" id="menu-toggle" class="d-flex align-items-center gap-2">
+      <a href="{% url 'admin_categories' %}" id="menu-toggle" class="d-flex align-items-center gap-2">
         <i class="fa-solid fa-list"></i>
         <p class="my-auto">Categories</p>
       </a>
@@ -62,7 +62,8 @@
 
       <!-- Page Content -->
       <div class="mt-5">
-        <p>Welcome to the Admin Dashboard</p>
+        {% block body%}
+        {% endblock %}
       </div>
     </div>
     <script>
@@ -72,5 +73,20 @@
         });
       });
     </script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
+     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.css" rel="stylesheet">
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.tags == 'success'%}
+                    <script type="text/javascript">toastr['success']('{{ message }}');</script>
+                {% elif message.tags == 'info' %}
+                    <script type=text/javascript>toastr['info']('{{ message }}')</script>
+                {% elif message.tags == 'warning' %}
+                    <script type=text/javascript>toastr['warning']('{{ message }}')</script>
+                {% elif message.tags == 'error' %}
+                    <script type=text/javascript>toastr['error']('{{ message }}')</script>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
   </body>
 </html>
