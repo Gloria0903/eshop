@@ -464,16 +464,48 @@ def delete_size(request, id):
         return render(request, 'admin/sizes.html', {'form': form, 'sizes': sizes, 'size': size, 'type': 'delete'})
 
 
+@admin_required
 def create_color(request):
     if request.method == 'POST':
         form = ColorForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('admin_color_list')  # Redirect to a color list view
+            return redirect('color_listing')
     else:
         form = ColorForm()
-    return render(request, 'admin/create_color.html', {'form': form})
+        colors = Color.objects.all()
+    return render(request, 'admin/colors.html', {'form': form, 'colors': colors})
 
+
+@admin_required
+def edit_color(request, id):
+    color = get_object_or_404(Color, id=id)
+    colors = Color.objects.all()
+    if request.method == 'POST':
+        form = ColorForm(request.POST, instance=color)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Color updated successfully')
+            return redirect('color_listing')
+        else:
+            messages.error(request, 'Color update failed')
+            return render(request, 'admin/colors.html', {'form': form, 'colors': colors, 'type': 'edit'})
+    else:
+        form = ColorForm(instance=color)
+        return render(request, 'admin/colors.html', {'form': form, 'colors': colors, 'type': 'edit'})
+
+
+@admin_required
+def delete_color(request, id):
+    color = get_object_or_404(Color, id=id)
+    colors = Color.objects.all()
+    if request.method == 'POST':
+        color.delete()
+        messages.success(request, 'Color deleted successfully')
+        return redirect('color_listing')
+    else:
+        form = ColorForm(instance=color)
+        return render(request, 'admin/colors.html', {'form': form, 'colors': colors, 'color': color, 'type': 'delete'})
 
 @admin_required
 def create_product(request):

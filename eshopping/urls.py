@@ -47,7 +47,11 @@ urlpatterns = [
          views.edit_size, name='edit_size'),
     path('admin/sizes/<int:id>/delete',
          views.delete_size, name='delete_size'),
-    path('admin/colors/create/', views.create_color, name='admin_create_color'),
+    path('admin/colors/', views.create_color, name='color_listing'),
+    path('admin/colors/<int:id>/edit',
+         views.edit_color, name='edit_color'),
+    path('admin/colors/<int:id>/delete',
+         views.delete_color, name='delete_color'),
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
