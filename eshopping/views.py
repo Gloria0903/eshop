@@ -87,62 +87,65 @@ def customer_logout(request):
     request.session.clear()
     return redirect('customerlogin')
 
-
-@login_required(login_url='customerlogin')
 def index(request):
     '''load index.html'''
-    #pylint: disable = E1101:no-member
     products = Product.objects.all()
-    print("logged in user: ", request.user.is_authenticated)
-    for product in products:
-        print(f"Product ID: {product.id}")
-    return render(request, 'index.html',{'products': products})
+    categories = Category.objects.all()
+    return render(request, 'index.html',{'products': products, 'categories': categories})
 
 
 def shop(request):
     '''load shop.html'''
-    #pylint: disable = E1101:no-member
     products = Product.objects.all()
-    return render(request, 'shop.html',{'products': products})
+    categories = Category.objects.all()
+    return render(request, 'shop.html',{'products': products, 'categories': categories})
 
-# @login_required(login_url='customerlogin')
 def detail(request, id):
     '''load detail.html'''
     product = get_object_or_404(Product, id=id)
+    products = Product.objects.all().order_by('-id')[:10]
+    categories = Category.objects.all()
     if request.method == 'POST':
         qty = int(request.POST.get('quantity'))
         user_id = 1
         user = get_object_or_404(Customer, id=user_id)
         Cart.objects.create(user=user, product=product, quantity=qty)
         return redirect('cart')
-    return render(request, 'detail.html', {'product': product})
+    return render(request, 'detail.html', {'product': product, 'similar_products': products, 'categories': categories})
 
 
 def contact(request):
     '''load contact.html'''
-    return render(request, 'contact.html')
+    categories = Category.objects.all()
+    return render(request, 'contact.html', {'categories': categories})
 
 
+@login_required(login_url='customerlogin')
 def checkout(request):
     '''load checkout.html'''
-    return render(request, 'checkout.html')
+    categories = Category.objects.all()
+    return render(request, 'checkout.html', {'categories': categories})
 
 
 @login_required(login_url='customerlogin')
 def cart(request):
     '''load cart.html'''
-    cartItems = Cart.objects.filter(user_id=1)
+    user = request.user
+    categories = Category.objects.all()
+    cartItems = Cart.objects.filter(user_id=user.id)
     subtotals = 0
     for item in cartItems:
         subtotals += item.total_price()
-    return render(request, 'cart.html', {'cartItems': cartItems, 'subtotals': subtotals})
+    return render(request, 'cart.html', {'cartItems': cartItems, 'subtotals': subtotals, 'categories': categories})
 
+@login_required(login_url='customerlogin')
 def delete_cart_item(request, cart_id):
     '''delete cart item'''
     cartItem = get_object_or_404(Cart, id=cart_id)
     cartItem.delete()
     return redirect('cart')
 
+@login_required(login_url='customer_url')
 def update_cart_qty(request, cart_id):
     '''update cart item'''
     if request.method == 'GET':
@@ -157,150 +160,6 @@ def update_cart_qty(request, cart_id):
         return redirect('cart')
     
     return redirect('cart')
-# pylint: disable = W0613
-def get(request, val):
-    '''load category.html'''
-    return render(request, 'category.html', locals())
-
-
-class CategoryView(View):
-    '''load northing yet'''
-    #pylint: disable = W0107
-    pass
-
-
-# create
-def insert_data(request):
-    '''add data to db'''
-    if request.method == 'POST':
-        product_name = request.POST.get('productname')
-        title = request.POST.get('title')
-        selling_price = request.POST.get('selling_price')
-        discounted_price = request.POST.get('discounted_price')
-        description = request.POST.get('description')
-        composition = request.POST.get('composition')
-        category = request.POST.get('category')
-        product_image = request.POST.get('product_image')
-        create_product = Product(productname=product_name, title=title,
-                        selling_price=selling_price,
-                        discounted_price=discounted_price, description=description,
-                        composition=composition,
-                        category=category, product_image=product_image)
-
-        create_product.save()
-        return redirect('/')
-    else:
-        return render(request, 'index.html')
-
-
-
-# pylint: disable = W0613
-def delete(request, id):
-    '''load delete product'''
-    #pylint: disable= E1101
-    p = Product.objects.get(id=id)
-    p.delete()
-    return redirect('/')
-
-
-# Create your views here.
-class Index(View):
-    '''handles index'''
-    def post(self, request):
-        '''posting'''
-        product = request.POST.get('product')
-        remove = request.POST.get('remove')
-        #pylint: disable = W0621:redefined-outer-name
-        cart = request.session.get('cart')
-        if cart:
-            quantity = cart.get(product)
-            if quantity:
-                if remove:
-                    if quantity <= 1:
-                        cart.pop(product)
-                    else:
-                        cart[product] = quantity - 1
-                else:
-                    cart[product] = quantity + 1
-
-            else:
-                cart[product] = 1
-        else:
-            cart = {}
-            cart[product] = 1
-
-        request.session['cart'] = cart
-        print('cart', request.session['cart'])
-        return redirect('homepage')
-
-    def get(self, request):
-        '''gets cart'''
-        print("logged in user: ", request.user)
-        return HttpResponseRedirect(f'/store{request.get_full_path()[1:]}')
-
-
-def store(request):
-    '''handles store'''
-    #pylint: disable = W0621
-    cart = request.session.get('cart')
-    if not cart:
-        request.session['cart'] = {}
-    products = None
-    categories = Category.get_all_categories()
-    category_id = request.GET.get('category')
-    if category_id:
-        products = Product.get_all_products_by_category_id(category_id)
-    else:
-        products = Product.get_all_products()
-
-    data = {}
-    data['products'] = products
-    data['categories'] = categories
-
-    print('you are : ', request.session.get('email'))
-    return render(request, 'index.html', data)
-
-
-
-class CheckOut(View):
-    '''checkout for customer'''
-    def post(self, request):
-        '''post a checkout'''
-        address = request.POST.get('address')
-        phone = request.POST.get('phone')
-        customer = request.session.get('customer')
-        # pylint: disable = W0621
-        cart = request.session.get('cart')
-        #pylint: disable = E1101
-        products = Product.get_products_by_id(list(cart.keys()))
-        print(address, phone, customer, cart, products)
-
-        for product in products:
-            print(cart.get(str(product.id)))
-            order = Order(customer=Customer(id=customer),
-                        product=product,
-                        price=product.price,
-                        address=address,
-                        phone=phone,
-                        quantity=cart.get(str(product.id)))
-            order.save()
-        request.session['cart'] = {}
-
-        return redirect('cart')
-
-
-# orders view
-
-
-class OrderView(View):
-    '''handles orders'''
-
-    def get(self, request):
-        '''gets Order'''
-        customer = request.session.get('customer')
-        orders = Order.get_orders_by_customer(customer)
-        print(orders)
-        return render(request, 'orders.html', {'orders': orders})
 
 def payment(request):
     """
