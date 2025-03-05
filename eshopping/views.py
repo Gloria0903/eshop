@@ -126,8 +126,11 @@ def contact(request):
 @login_required(login_url='customerlogin')
 def checkout(request):
     '''load checkout.html'''
+    user = request.user
+    cart_items = Cart.objects.filter(user=request.user)
+    total_price = sum(item.total_price() for item in cart_items)
     categories = Category.objects.all()
-    return render(request, 'checkout.html', {'categories': categories})
+    return render(request, 'checkout.html', {'categories': categories, 'cartItems': cart_items, 'total_price': total_price, "customer": user})
 
 
 @login_required(login_url='customerlogin')
@@ -206,6 +209,11 @@ def create_order(request):
     if not cart_items:
         messages.error(request, 'Your cart is empty')
         return redirect('cart_view')
+    
+    full_name = request.POST.get('first_name', '') + ' ' + request.POST.get('last_name', '')
+    city = request.POST.get('city', '')
+    address = full_name + ', ' + city
+    phone = request.POST.get('phone', '')
 
     for cart_item in cart_items:
         Order.objects.create(
@@ -213,8 +221,8 @@ def create_order(request):
             customer=request.user,
             quantity=cart_item.quantity,
             price=cart_item.total_price(),
-            address=request.POST.get('address', ''),
-            phone=request.POST.get('phone', '')
+            address=address,
+            phone=phone
         )
     cart_items.delete()
     messages.success(request, 'Order placed successfully')
