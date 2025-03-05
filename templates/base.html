@@ -131,11 +131,14 @@
                         <div class="navbar-nav mr-auto py-0">
                             <a href="{% url 'index' %}" class="nav-item nav-link ">Home</a>
                             <a href="{% url 'shop' %}" class="nav-item nav-link ">Shop</a>
-                            <a href="{% url 'cart' %}" class="nav-item nav-link ">Shopping Cart</a>
+                            <a href="{% url 'cart_view' %}" class="nav-item nav-link ">Shopping Cart</a>
                             <a href="{% url 'contact' %}" class="nav-item nav-link">Contact</a>
                         </div>
                         <div class="navbar-nav ml-auto py-0">
                             {% if request.user.is_authenticated %}
+                                {% if request.user.is_superuser %}
+                                     <a href="{% url 'admin_dashboard' %}" class="nav-item nav-link">Admin Dashboard</a>
+                                {% endif %}
                             <h6 class="h6 nav-item nav-link my-auto">Hi, {{request.user.first_name}}</h6>
                             <a href="{% url 'logout' %}" class="nav-item nav-link">Logout</a>
                             {% else %}
@@ -179,7 +182,7 @@
                                             class="fa fa-angle-right mr-2"></i>Our Shop</a>
                                     {% comment %} <a class="text-dark mb-2" href="{% url 'detail' %}"><i
                                             class="fa fa-angle-right mr-2"></i>Shop Detail</a> {% endcomment %}
-                                    <a class="text-dark mb-2" href="{% url 'cart' %}"><i
+                                    <a class="text-dark mb-2" href="{% url 'cart_view' %}"><i
                                             class="fa fa-angle-right mr-2"></i>Shopping Cart</a>
                                     <a class="text-dark mb-2" href="{% url 'checkout' %}"><i
                                             class="fa fa-angle-right mr-2"></i>Checkout</a>

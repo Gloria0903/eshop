@@ -113,7 +113,7 @@ class Size(models.Model):
 
     def __str__(self):
         return f"{self.name}"
-
+    
     @staticmethod
     def get_all_sizes():
         '''gets all sizes'''
@@ -158,11 +158,14 @@ class Product(models.Model):
 
 class Cart(models.Model):
     user = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    product_size_color = models.ForeignKey(ProductSizeColor, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, default=1)
+    product_size_color = models.ForeignKey(ProductSizeColor, on_delete=models.CASCADE, null=True)
     quantity = models.PositiveIntegerField(default=1)
+    colorVariation = models.CharField(max_length=50, default='', blank=True)
+    sizeVariation = models.CharField(max_length=50, default='', blank=True)
 
     def total_price(self):
-        return self.quantity * self.product_size_color.product.selling_price
+        return self.quantity * self.product.selling_price
 
 
 class Order(models.Model):

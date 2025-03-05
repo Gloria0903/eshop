@@ -17,7 +17,7 @@ from .forms import CustomerRegistrationForm # or however you are handling your f
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from .decorators import admin_required
-from .models import Product, Cart
+from .models import Product, Cart, ProductSizeColor
 
 # Register
 class CustomerRegistration(View):
@@ -103,6 +103,9 @@ def shop(request):
 def detail(request, id):
     '''load detail.html'''
     product = get_object_or_404(Product, id=id)
+    product_size_colors = ProductSizeColor.objects.filter(product=product)
+    for p in product_size_colors:
+        print("Product size color: ", p.__dict__)
     products = Product.objects.all().order_by('-id')[:10]
     categories = Category.objects.all()
     if request.method == 'POST':
@@ -128,38 +131,95 @@ def checkout(request):
 
 
 @login_required(login_url='customerlogin')
-def cart(request):
-    '''load cart.html'''
-    user = request.user
+def cart_view(request):
+    cart_items = Cart.objects.filter(user=request.user)
     categories = Category.objects.all()
-    cartItems = Cart.objects.filter(user_id=user.id)
-    subtotals = 0
-    for item in cartItems:
-        subtotals += item.total_price()
-    return render(request, 'cart.html', {'cartItems': cartItems, 'subtotals': subtotals, 'categories': categories})
+    total_price = sum(item.total_price() for item in cart_items)
+    return render(request, 'cart.html', {'cartItems': cart_items, 'subtotals': total_price, 'categories': categories})
+
 
 @login_required(login_url='customerlogin')
-def delete_cart_item(request, cart_id):
-    '''delete cart item'''
-    cartItem = get_object_or_404(Cart, id=cart_id)
-    cartItem.delete()
-    return redirect('cart')
+def add_to_cart(request, product_id):
+    print("Adding to cart")
+    product = get_object_or_404(Product, id=product_id)
+    product_size_color = None
+    quantity = int(request.POST.get('quantity', 1))
+    size_id = request.POST.get('size', None)
+    color_id = request.POST.get('color', None)
+    colorVariation = None
+    sizeVariation = None
 
-@login_required(login_url='customer_url')
-def update_cart_qty(request, cart_id):
-    '''update cart item'''
-    if request.method == 'GET':
-        cartItem = get_object_or_404(Cart, id=cart_id)
-        qty = int(request.GET.get('quantity'))
-        if (qty > 0):
-            cartItem.quantity = qty
-            cartItem.save()
-            messages.success(request, 'Cart updated successfully')
-        else:
-            cartItem.delete()
-        return redirect('cart')
-    
-    return redirect('cart')
+    if size_id and color_id:
+        color = get_object_or_404(Color, id=color_id)
+        size = get_object_or_404(Size, id=size_id)
+        colorVariation = color.name
+        sizeVariation = size.name
+        size_id = int(size_id)
+        color_id = int(color_id)
+        product_size_color = get_object_or_404(
+            ProductSizeColor, product=product, size_id=size_id)
+    elif size_id:
+        size_id = int(size_id)
+        size = get_object_or_404(Size, id=size_id)
+        sizeVariation = size.name
+        product_size_color = get_object_or_404(
+            ProductSizeColor, product=product, size_id=size_id)
+
+    cart_item, created = Cart.objects.get_or_create(
+        user=request.user,
+        product=product,
+        product_size_color=product_size_color,
+        defaults={'quantity': quantity},
+        colorVariation=colorVariation,
+        sizeVariation=sizeVariation
+    )
+    if not created:
+        cart_item.quantity += quantity
+        cart_item.save()
+    messages.success(request, 'Item added to cart successfully')
+    return redirect('cart_view')
+
+
+@login_required(login_url='customerlogin')
+def update_cart_quantity(request, cart_id, action):
+    cart_item = get_object_or_404(Cart, id=cart_id)
+    if action == 'increase':
+        cart_item.quantity += 1
+    elif action == 'decrease' and cart_item.quantity > 1:
+        cart_item.quantity -= 1
+    cart_item.save()
+    messages.success(request, 'Cart updated successfully')
+    return redirect('cart_view')
+
+
+@login_required(login_url='customerlogin')
+def remove_from_cart(request, cart_id):
+    cart_item = get_object_or_404(Cart, id=cart_id)
+    cart_item.delete()
+    messages.success(request, 'Item removed from cart successfully')
+    return redirect('cart_view')
+
+
+@login_required(login_url='customerlogin')
+def create_order(request):
+    cart_items = Cart.objects.filter(user=request.user)
+    if not cart_items:
+        messages.error(request, 'Your cart is empty')
+        return redirect('cart_view')
+
+    for cart_item in cart_items:
+        Order.objects.create(
+            product_size_color=cart_item.product_size_color,
+            customer=request.user,
+            quantity=cart_item.quantity,
+            price=cart_item.total_price(),
+            address=request.POST.get('address', ''),
+            phone=request.POST.get('phone', '')
+        )
+    cart_items.delete()
+    messages.success(request, 'Order placed successfully')
+    return redirect('order_history')
+
 
 def payment(request):
     """
@@ -195,38 +255,6 @@ def payment(request):
         return HttpResponse(response)
     except Exception as e:
         return JsonResponse({"error": f"An error occurred: {str(e)}"}, status=500)
-
-@login_required
-def add_to_cart(request, product_id):
-    product = get_object_or_404(Product, id=product_id)
-    cart_item, created = Cart.objects.get_or_create(
-        user=request.user,
-        product=product,
-        defaults={'quantity': 1}
-    )
-    if not created:
-        cart_item.quantity += 1
-        cart_item.save()
-    return redirect('cart_view')
-
-from django.shortcuts import render
-from .models import Cart
-
-@login_required
-def cart_view(request):
-    cart_items = Cart.objects.filter(user=request.user)
-    total_price = sum(item.total_price() for item in cart_items)
-    return render(request, 'cart.html', {'cart_items': cart_items, 'total_price': total_price})
-
-from django.http import JsonResponse
-
-@login_required
-def update_cart(request, product_id, quantity):
-    cart_item = get_object_or_404(Cart, user=request.user, product_id=product_id)
-    cart_item.quantity = quantity
-    cart_item.save()
-    total_price = sum(item.total_price() for item in Cart.objects.filter(user=request.user))
-    return JsonResponse({'total_price': total_price})
 
 
 # admin
@@ -265,7 +293,8 @@ def edit_category(request, id):
     else:
         form = CategoryForm(instance=category)
         return render(request, 'admin/categories.html', {'form': form, 'categories': categories, 'type': 'edit'})
-    
+
+
 @admin_required
 def delete_category(request, id):
     category = get_object_or_404(Category, id=id)

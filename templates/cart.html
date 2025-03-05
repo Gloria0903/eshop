@@ -21,34 +21,44 @@
                     <thead class="bg-secondary text-dark">
                         <tr>
                             <th>Products</th>
-                            <th>Price</th>
+                            <th>Price (Ksh)</th>
                             <th>Quantity</th>
-                            <th>Total</th>
+                            <th>Total (Ksh)</th>
                             <th>Remove</th>
                         </tr>
                     </thead>
                     <tbody class="align-middle">
                        {% for cartItem in cartItems %}
                          <tr>
-                            <td class="align-middle"><img src="{{ cartItem.product.product_image }}" alt="" style="width: 50px;"> {{cartItem.product.title  }}</td>
-                            <td class="align-middle">ksh {{ cartItem.product.selling_price }}</td>
-                            <td class="align-middle">
-                                <form action="{% url 'update_cart_quantity' cart_id=cartItem.id %}" method="get" class="input-group quantity mx-auto" style="width: 100px;">
-                                    <div class="input-group-btn">
-                                        <button type="submit" class="btn btn-sm btn-primary btn-minus" >
-                                        <i class="fa fa-minus"></i>
-                                        </button>
+                            <td class="align-middle d-flex justify-content-between">
+                                <img src="{{ cartItem.product.product_image.url }}" alt="" style="width: 50px;">
+                                <div class="">
+                                    <p class="m-0">{{ cartItem.product.title|slice:"0:30" }}</p>
+                                    <div class="d-flex justify-content-between">
+                                        {% if cartItem.sizeVariation %}
+                                            <p class="m-0">Size: {{ cartItem.sizeVariation }}</p>
+                                        {% endif %}
+                                        {% if cartItem.colorVariation %}
+                                            <p class="m-0">Color: {{ cartItem.colorVariation }}</p>
+                                        {% endif %}
                                     </div>
-                                    <input type="text" class="form-control form-control-sm bg-secondary text-center" value="{{cartItem.quantity}}" name="quantity">
-                                    <div class="input-group-btn">
-                                        <button type="submit" class="btn btn-sm btn-primary btn-plus">
-                                            <i class="fa fa-plus"></i>
-                                        </button>
-                                    </div>
-                                </form>
+                                </div>
                             </td>
-                            <td class="align-middle">ksh {{ cartItem.total_price }}</td>
-                            <td class="align-middle"><a href="{% url 'delete_cart_item' cart_id=cartItem.id %}" class="btn btn-sm btn-primary"><i class="fa fa-times"></i></a></td>
+                            <td class="align-middle">{{ cartItem.product.selling_price }}</td>
+                            <td class="align-middle">
+                                    <div class="input-group" style="width: 100px;">
+                                        <a href="{% url 'update_cart_quantity' cart_id=cartItem.id action='decrease' %}" class="btn btn-sm btn-primary btn-minus">
+                                            <i class="fa fa-minus"></i>
+                                        </a>
+                                        {% csrf_token %}
+                                        <input type="text" class="form-control form-control-sm bg-secondary text-center" value="{{cartItem.quantity}}" name="quantity" disabled>
+                                        <a href="{% url 'update_cart_quantity' cart_id=cartItem.id action='increase' %}" class="btn btn-sm btn-primary btn-plus">
+                                            <i class="fa fa-plus"></i>
+                                        </a>
+                                    </div>
+                            </td>
+                            <td class="align-middle">{{ cartItem.total_price }}</td>
+                            <td class="align-middle"><a href="{% url 'remove_from_cart' cart_id=cartItem.id %}" class="btn btn-sm btn-primary"><i class="fa fa-times"></i></a></td>
                         </tr>
                        {% endfor %}
                     </tbody>
@@ -80,9 +90,9 @@
                     <div class="card-footer border-secondary bg-transparent">
                         <div class="d-flex justify-content-between mt-2">
                             <h5 class="font-weight-bold">Total</h5>
-                            <h5 class="font-weight-bold">ksh12500</h5>
+                            <h5 class="font-weight-bold">ksh {{subtotals}}</h5>
                         </div>
-                        <button class="btn btn-block btn-primary my-3 py-3">Proceed To Checkout</button>
+                        <a href="{% url 'checkout' %}" class="btn btn-block btn-primary my-3 py-3">Proceed To Checkout</a>
                     </div>
                 </div>
             </div>
