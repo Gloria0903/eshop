@@ -98,10 +98,38 @@ def index(request):
 
 
 def shop(request):
-    '''load shop.html'''
+    '''load shop.html with filters'''
     products = Product.objects.all()
     categories = Category.objects.all()
-    return render(request, 'shop.html',{'products': products, 'categories': categories})
+    colors = Color.objects.all()
+    sizes = Size.objects.all()
+
+    # Get filter parameters
+    keyword = request.GET.get('keyword', '')
+    selected_colors = request.GET.getlist('colors')
+    selected_sizes = request.GET.getlist('sizes')
+    selected_categories = request.GET.getlist('categories')
+
+    # Apply filters
+    if keyword:
+        products = products.filter(title__icontains=keyword)
+    if selected_colors:
+        products = products.filter(productsizecolor__color__id__in=selected_colors).distinct()
+    if selected_sizes:
+        products = products.filter(productsizecolor__size__id__in=selected_sizes).distinct()
+    if selected_categories:
+        products = products.filter(categories__id__in=selected_categories).distinct()
+
+    return render(request, 'shop.html', {
+        'products': products,
+        'categories': categories,
+        'colors': colors,
+        'sizes': sizes,
+        'selected_colors': selected_colors,
+        'selected_sizes': selected_sizes,
+        'selected_categories': selected_categories,
+        'keyword': keyword
+    })
 
 def detail(request, id):
     '''load detail.html'''
