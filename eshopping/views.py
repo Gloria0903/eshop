@@ -387,7 +387,16 @@ def mpesa_callback(request, order_id):
 @admin_required
 def admin_dashboard(request):
     '''load admin dashboard'''
-    return render(request, 'admin/base_layout.html')
+    total_products = Product.objects.all().count()
+    total_categories = Category.objects.all().count()
+    total_orders = Order.objects.all().count()
+    total_customers = Customer.objects.all().count()
+    return render(request, 'admin/stats.html', {
+        'total_products': total_products,
+        'total_categories': total_categories,
+        'total_orders': total_orders,
+        'total_customers': total_customers
+    })
 
 @admin_required
 def create_category(request):
@@ -568,3 +577,27 @@ def delete_product(request, id):
         return redirect('admin_products')
     else:
         return render(request, 'admin/product_form.html', {'product': product, 'type': 'delete'})
+    
+
+@admin_required
+def admin_list_orders(request):
+    orders = Order.objects.all().order_by('-id')
+    order_count = orders.count()
+    return render(request, 'admin/orders.html', {'orders': orders, 'order_count': order_count})
+
+
+@login_required(login_url='customerlogin')
+def get_order_details(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+    return render(request, 'admin/order_details.html', {'order': order})
+
+@admin_required
+def get_customers(request):
+    customers = Customer.objects.all().order_by('-id')
+    return render(request, 'admin/customers.html', {'customers': customers})
+
+
+@admin_required
+def get_customer_detail(request, customer_id):
+    customer = get_object_or_404(Customer, id=customer_id)
+    return render(request, 'admin/customer_detail.html', {'customer': customer})

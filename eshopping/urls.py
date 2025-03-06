@@ -62,6 +62,12 @@ urlpatterns = [
          views.edit_color, name='edit_color'),
     path('admin/colors/<int:id>/delete',
          views.delete_color, name='delete_color'),
+    path('admin/orders/', views.admin_list_orders, name='orders'),
+    path('admin/orders/<int:order_id>', views.get_order_details, name='order_detail'),
+    path('admin/customers/',
+         views.get_customers, name='list_customers'),
+    path('admin/customers/<int:customer_id>/',
+         views.get_customer_detail, name='customer_detail'),
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

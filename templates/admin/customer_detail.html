@@ -1,0 +1,62 @@
+{% extends 'admin/base_layout.html' %} 
+{% block title %}
+<title>Customer Detail</title>
+{% endblock %} 
+{% block body %}
+<div class="">
+    <div class="d-flex justify-content-between align-items-center my-2">
+        <h4 class="h4">
+            Customer Details
+        </h4>
+    </div>
+    <div class="card mb-4">
+        <div class="card-header">
+            Customer Details
+        </div>
+        <div class="card-body">
+            <p><strong>Name:</strong> {{ customer.first_name }} {{ customer.last_name }}</p>
+            <p><strong>Contact:</strong> {{ customer.phone }}</p>
+            <p><strong>Address:</strong> {{ customer.email }}</p>
+        </div>
+    </div>
+    <div class="card mb-4">
+        <div class="card-header">
+            Orders
+        </div>
+        <div class="card-body">
+            <table class="table w-100 border">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Order ID</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Total Amount</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in customer.orders.all %}
+                    <tr>
+                        <td scope="row">{{ forloop.counter }}</td>
+                        <td>{{ order.id }}</td>
+                        <td>{{ order.date }}</td>
+                        <td>KES {{ order.totalAmount }}</td>
+                        <td>
+                            {% if order.isPaid %}
+                            <span class="badge bg-success">Paid</span>
+                            {% else %}
+                            <span class="badge bg-danger">Not Paid</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'order_detail' order_id=order.id %}" class="btn btn-primary">View</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

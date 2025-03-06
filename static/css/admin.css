@@ -32,13 +32,17 @@ body {
 
 .sidebar a {
     text-decoration: none;
-    padding: 15px;
+    padding: 7px 10px;
     display: block;
     border: 1px solid var(--secondary-color);
     border-right: none;
     border-left: none;
     border-bottom: none;
     color: var(--text-color);
+}
+
+.sidebar a i{
+    font-size: small;
 }
 
 .sidebar a:hover {

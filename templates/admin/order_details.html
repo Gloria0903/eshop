@@ -1,0 +1,82 @@
+{% extends 'admin/base_layout.html' %} 
+{% block title %}
+<title>Order Detail</title>
+{% endblock %} 
+{% block body %}
+<div class="">
+    <div class="d-flex justify-content-between align-items-center my-2">
+        <h4 class="h4">
+            Order Details
+        </h4>
+    </div>
+    <div class="card mb-4">
+        <div class="card-header">
+            Customer Details
+        </div>
+        <div class="card-body">
+            <p><strong>Name:</strong> {{ order.customer.first_name }} {{ order.customer.last_name }}</p>
+            <p><strong>Contact:</strong> {{ order.phone }}</p>
+            <p><strong>Address:</strong> {{ order.address }}</p>
+        </div>
+    </div>
+    <div class="card mb-4">
+        <div class="card-header">
+            Order Items
+        </div>
+        <div class="card-body">
+            <table class="table w-100 border">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Item</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in order.order_items.all %}
+                    <tr>
+                        <td scope="row">{{ forloop.counter }}</td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                <img src="{{item.product.product_image.url}}" alt="{{item.product.title|slice:'0:10'}}..." class="img-fluid border p-2" style="width: 50px; height: 50px;">
+                                <span class="">
+                                    <p>{{ item.product.title }}</p>
+                                    <span class="d-flex gap-2 align-items-center">
+                                        {% if item.color %}
+                                        <span class="badge bg-primary text-white">Color: {{ item.color }}</span>
+                                    {% endif %}
+                                    {% if item.size %}
+                                         <span class="badge bg-primary text-white">Size: {{ item.size }}</span>
+                                    {% endif %}
+                                    </span>
+                                </span>
+                            </div>
+                        </td>
+                        <td>{{ item.quantity }}</td>
+                        <td>KES {{ item.price }}</td>
+                        <td>KES {{ item.total_price }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card mb-4">
+        <div class="card-header">
+            Order Summary
+        </div>
+        <div class="card-body">
+            <p><strong>Total Amount:</strong> KES {{ order.totalAmount }}</p>
+            <p><strong>Status:</strong> 
+                {% if order.isPaid %}
+                <span class="badge bg-success">Paid</span>
+                {% else %}
+                <span class="badge bg-danger">Not Paid</span>
+                {% endif %}
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
