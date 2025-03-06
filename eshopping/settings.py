@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-s&1w4##%t_2*yjw*$merra(b+!js)&4oca55aly3g#)a(xxms)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -36,18 +36,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'store',
     'django.contrib.sites',
     'django_daraja',
-
-
-
-
-    # 'allauth',
-    # 'allauth.account',
-    # 'allauth.socialaccount',
-
     'eshopping',
+    'rest_framework'
 
 
 ]
@@ -155,11 +147,10 @@ AUTHENTICATION_BACKENDS = (
     # 'allauth.account.auth_backends.AuthenticationBackend',
 )
 
-# M_PESA_LIVE_URL = 'https://api.safaricom.co.ke/mpesa'  # For live environment
-M_PESA_TEST_URL = 'https://sandbox.safaricom.co.ke/mpesa'  # For testing environment
-
-M_PESA_CONSUMER_KEY = 'q0S9S3QmgwMoRZ3R2vaEWhdffe2ySAyjZTwAXLdMWCzdALPS'
-M_PESA_CONSUMER_SECRET = 'qhAAztwOEx4Euzl5lBLXSzNVy71ICUsBkrUObgwlRNiEhBJNe9pcntY9ANxUbLAz'
-
-# M_PESA_SHORTCODE = 'YOUR_SHORTCODE'
-# M_PESA_PASSKEY = 'YOUR_PASSKEY'
+MPESA_ENVIRONMENT = 'sandbox'
+MPESA_SHORTCODE = "174379"
+MPESA_EXPRESS_SHORTCODE = "174379"
+MPESA_SHORTCODE_TYPE = 'till_number'
+MPESA_CONSUMER_KEY = '6MNm4pPe2xtLJsm16GIJY68ydDgUNbJLjf1Pt6NJBZdBirim'
+MPESA_CONSUMER_SECRET = 'VcnG5aJk4BVQaGI1zavSttRuWVxN7H9jf5wfmRl71sdeACgLnVWlD0iNcdVRe4yv'
+MPESA_PASSKEY = 'bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919'

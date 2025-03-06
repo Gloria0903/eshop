@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load static%}
+{% block title %}
+<title>Pay Order</title>
+{% endblock %}
+{%  block body %}
+    <!-- Checkout Start -->
+    <div class="container-fluid pt-5">
+        <form action="{% url 'pay_order' order_id=order.id %}" method="post" class="row d-flex justify-content-center">
+            {% csrf_token %}
+             <div class="col-md-4 card border-secondary mb-5">
+                    <div class="card-header bg-secondary border-0">
+                        <h4 class="font-weight-semi-bold m-0 text-center">Pay Now</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                                <label for="phone">Mpesa Phone Number</label>
+                                <input type="text" class="form-control" name="phone" value="{{order.phone}}" id="phone">
+                        </div>
+                    </div>
+                    <div class="card-footer border-secondary bg-transparent">
+                        <button type="submit" class="btn btn-lg btn-block btn-primary font-weight-bold my-3 py-3 text-white">Pay KES {{order.totalAmount}}</button>
+                    </div>
+                </div>
+        </form>
+    </div>
+    <!-- Checkout End -->
+
+
+{%endblock%}

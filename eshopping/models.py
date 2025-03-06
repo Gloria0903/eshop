@@ -161,8 +161,8 @@ class Cart(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, default=1)
     product_size_color = models.ForeignKey(ProductSizeColor, on_delete=models.CASCADE, null=True)
     quantity = models.PositiveIntegerField(default=1)
-    colorVariation = models.CharField(max_length=50, default='', blank=True)
-    sizeVariation = models.CharField(max_length=50, default='', blank=True)
+    colorVariation = models.CharField(max_length=50, null=True)
+    sizeVariation = models.CharField(max_length=50, null=True)
 
     def total_price(self):
         return self.quantity * self.product.selling_price
@@ -170,13 +170,9 @@ class Cart(models.Model):
 
 class Order(models.Model):
     '''Order model'''
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, default=1)
-    product_size_color = models.ForeignKey(
-        ProductSizeColor, on_delete=models.CASCADE, null=True)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    quantity = models.IntegerField(default=1)
-    price = models.FloatField()
     address = models.CharField(max_length=255, default='', blank=True)
+    totalAmount = models.FloatField()
     phone = models.CharField(max_length=50, default='', blank=True)
     date = models.DateField(default=datetime.datetime.today)
     isPaid = models.BooleanField(default=False)
@@ -190,4 +186,32 @@ class Order(models.Model):
         '''gets customer orders'''
         return Order.objects.filter(customer=customer_id).order_by('-date')
 
+
+class OrderItem(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    color = models.ForeignKey(Color, on_delete=models.CASCADE, null=True)
+    size = models.ForeignKey(Size, on_delete=models.CASCADE, null=True)
+    quantity = models.IntegerField(default=1)
+    price = models.FloatField(default=0)
+
+
+class Payment(models.Model):
+    '''Payment model'''
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    amountPaid = models.FloatField(default=0)
+    transactionId = models.CharField(max_length=255)
+    transactionDate = models.DateField(null=True)
+    receiptNumber = models.CharField(max_length=255, null=True)
+    referencePhoneNumber = models.CharField(max_length=255, null=True)
+    resultDesc = models.CharField(max_length=255, null=True)
+    resultCode = models.CharField(max_length=255, null=True)
+    responseReceived = models.BooleanField(default=False)
+    payment_method = models.CharField(max_length=255, default='Mpesa')
+    status = models.CharField(choices=(
+        ('PENDING', 'PENDING'),
+        ('COMPLETED', 'COMPLETED'),
+        ('FAILED', 'FAILED'),
+    ), max_length=50, default='PENDING')
+    timestamp = models.DateTimeField(auto_now_add=True)
 

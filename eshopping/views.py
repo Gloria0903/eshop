@@ -1,23 +1,26 @@
 '''views.py file'''
-from .forms import ProductForm, CategoryForm, SizeForm, ColorForm
-from .models import Product, Category, Size, Color
+from .forms import ProductForm, CategoryForm, SizeForm, ColorForm, CustomerRegistrationForm
+from .models import Product, Category, Size, Color, Payment, OrderItem, Cart, ProductSizeColor, Customer, Category, Order
 from django.contrib import messages
-from django.contrib.auth.hashers import check_password,make_password
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.shortcuts import render, redirect,get_object_or_404
-from django.urls import path
 from django.views import View
 from django_daraja.mpesa.core import MpesaClient
 from eshopping.forms import CustomerRegistrationForm
-from .models import Product, Customer, Category,Order
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
-from .forms import CustomerRegistrationForm # or however you are handling your form
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from .decorators import admin_required
-from .models import Product, Cart, ProductSizeColor
+import json
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from django_daraja.mpesa.utils import api_base_url, mpesa_config, mpesa_access_token
+import requests
+from datetime import datetime
+import base64
+import time
 
 # Register
 class CustomerRegistration(View):
@@ -103,9 +106,6 @@ def shop(request):
 def detail(request, id):
     '''load detail.html'''
     product = get_object_or_404(Product, id=id)
-    product_size_colors = ProductSizeColor.objects.filter(product=product)
-    for p in product_size_colors:
-        print("Product size color: ", p.__dict__)
     products = Product.objects.all().order_by('-id')[:10]
     categories = Category.objects.all()
     if request.method == 'POST':
@@ -214,56 +214,174 @@ def create_order(request):
     city = request.POST.get('city', '')
     address = full_name + ', ' + city
     phone = request.POST.get('phone', '')
+    total_price = sum(item.total_price() for item in cart_items)
+
+    order = Order.objects.create(
+        customer=request.user,
+        totalAmount=total_price,
+        address=address,
+        phone=phone
+    )
 
     for cart_item in cart_items:
-        Order.objects.create(
-            product_size_color=cart_item.product_size_color,
-            customer=request.user,
+        product_size_color = cart_item.product_size_color
+        color = product_size_color.color if product_size_color else None
+        size = product_size_color.size if product_size_color else None
+
+        OrderItem.objects.create(
+            order=order,
+            product=cart_item.product,
+            color=color,
+            size=size,
             quantity=cart_item.quantity,
-            price=cart_item.total_price(),
-            address=address,
-            phone=phone
+            price=cart_item.total_price()
         )
+        
     cart_items.delete()
     messages.success(request, 'Order placed successfully')
-    return redirect('order_history')
+    return redirect('pay_order', order_id=order.id)
 
 
-def payment(request):
+@login_required(login_url='customerlogin')
+def pay_order(request, order_id):
     """
     Handles Mpesa payment.
-    e.g http://127.0.0.1:8000/payment/?phone=07########&amount=1&reference=ref123&description=test
     """
-    cl = MpesaClient()
+    order = Order.objects.get(id=order_id)
+    amount = int(order.totalAmount)
+    if request.method == 'POST':
+        phone = request.POST.get('phone')
+        account_reference = 'Chic Wear'
+        transaction_desc = 'Payment for order'
+        callback_url = f"https://qtc6a7740fe1c845c0396f6ba7b9.free.beeceptor.com/orders/{order_id}/payment-confirmation"
+        cl = MpesaClient()
+        try:
+            response = cl.stk_push(
+                phone, amount,
+                account_reference, transaction_desc,
+                callback_url)
+            response_data = response.json()
+            checkout_request_id = response_data.get('CheckoutRequestID')
+            existing_payment = Payment.objects.filter(order=order)
+            if existing_payment.exists():
+                existing_payment.delete()
+            Payment.objects.create(
+                order=order, transactionId=checkout_request_id, amountPaid=amount, referencePhoneNumber=phone)
+            time.sleep(10)
+            return redirect('transaction_status', transaction_id=checkout_request_id)
+        except Exception as e:
+            return JsonResponse({"error": f"An error occurred: {str(e)}"}, status=500)
+    return render(request, 'pay_order.html', {'order': order})
 
-    # Get credentials from the request (GET or POST depending on your use case)
-    phone_number = request.GET.get('phone')
-    amount_string = request.GET.get('amount')
-    account_reference = request.GET.get('reference')
-    transaction_desc = request.GET.get('description')
-    callback_url = 'https://darajambili.herokuapp.com/express-payment'
 
-    # Validate inputs
-    if not all([phone_number, amount_string, account_reference, transaction_desc]):
-        return JsonResponse({"error": "Missing required parameters"}, status=400)
+@login_required(login_url='customerlogin')
+def query_transaction_status(request, transaction_id):
+    """
+    Queries the status of an Mpesa transaction.
+    """
+    payment = get_object_or_404(Payment, transactionId=transaction_id)
 
+    url = api_base_url() + 'mpesa/stkpushquery/v1/query'
+    order = payment.order
+    mpesa_environment = mpesa_config('MPESA_ENVIRONMENT')
+    if mpesa_environment == 'sandbox':
+        business_short_code = mpesa_config('MPESA_EXPRESS_SHORTCODE')
+    else:
+        business_short_code = mpesa_config('MPESA_SHORTCODE')
+    passkey = mpesa_config('MPESA_PASSKEY')
+    timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+    password = base64.b64encode((business_short_code + passkey + timestamp).encode('ascii')).decode('utf-8') 
+    
+    data = {
+        'BusinessShortCode': business_short_code,
+        'Password': password,
+        'Timestamp': timestamp,
+        'CheckoutRequestID': transaction_id,
+    }
+    
+    headers = {
+        'Authorization': 'Bearer ' + mpesa_access_token(),
+        'Content-type': 'application/json'
+    }
+    
     try:
-        # Convert amount to integer
-        amount = int(amount_string)
-    except ValueError:
-        return JsonResponse({"error": "Invalid amount. Must be a numeric value."}, status=400)
+        r = requests.post(url, json=data, headers=headers)
+        response = r.json()
 
-    # Proceed with Mpesa STK push
-    try:
-        response = cl.stk_push(
-            phone_number, amount,
-            account_reference, transaction_desc,
-            callback_url)
+        result = {}
 
-        return HttpResponse(response)
+        resultCode = response.get('ResultCode', '')
+        errorCode = response.get('errorCode', None)
+        if resultCode == '0':
+            payment.status = 'COMPLETED'
+            order.isPaid = True
+            order.save()
+            result['success'] = True
+            result['message'] = 'Payment Completed'
+            result['description'] = "Your payment has been processed successfully. Thank you for shopping with us!"
+        elif errorCode is not None:
+            # The request is being redirected, wait and try again
+            time.sleep(5)
+            return query_transaction_status(request, transaction_id)
+        else:
+            result['success'] = False
+            result['message'] = 'Payment Failed'
+            result['description'] = response.get('ResultDesc', '')
+            payment.status = 'FAILED'
+            payment.resultCode = resultCode
+            payment.resultDesc = response.get('ResultDesc', '')
+        payment.save()
+        
+        return render(request, 'confirm_payment.html', {'response': result, 'order_id': payment.order.id})
     except Exception as e:
-        return JsonResponse({"error": f"An error occurred: {str(e)}"}, status=500)
+        messages.error(request, "An error occurred while processing your payment")
+        return render(request, 'confirm_payment.html', {'order_id': payment.order.id})
 
+
+@api_view(['GET', 'POST'])
+def mpesa_callback(request, order_id):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        print(data)
+        order = Order.objects.get(id=order_id)
+        payment = get_object_or_404(Payment, order=order)
+        if data['Body']['stkCallback']['ResultCode'] == 0:
+            callbackMetaData = data['Body']['stkCallback'].get(
+            'CallbackMetadata', None)
+
+            if callbackMetaData is not None:
+                data = data['Body']['stkCallback']['CallbackMetadata']['Item']
+                amount = data[0].get('Value')
+                receipt_number = data[1].get('Value')
+                transaction_date = data[3].get('Value')
+                phone_number = data[4].get('Value')
+
+
+                payment.amountPaid = amount
+                payment.receiptNumber = receipt_number
+                payment.transactionDate = transaction_date
+                payment.referencePhoneNumber = phone_number
+                payment.responseReceived = True
+                payment.status = 'COMPLETED'
+                payment.save()
+
+                order.isPaid = True
+                order.save()
+
+                return Response({"message": "Your transaction has been processed successfully!"}, status=201)
+
+                # return render(request, 'confirm_payment.html', {'success': True, 'description': f"Your payment for order #{order_id} been processed successfully. Thankyou for shopping with us!", "order_id": order_id})
+        else:
+            resultCode = data['Body']['stkCallback']['ResultCode']
+            resultDesc = data['Body']['stkCallback']['ResultDesc']
+            payment.resultCode = resultCode
+            payment.resultDesc = resultDesc
+            payment.responseReceived = True
+            payment.status = 'FAILED'
+            payment.save()
+            return Response({"message": "Your transaction could not be completed."}, status=400)
+            # return render(request, 'confirm_payment.html', {"success": False, "description": resultCode, "order_id": order_id})
+    return Response({'message': 'Method not allowed'}, status=405)
 
 # admin
 @admin_required
