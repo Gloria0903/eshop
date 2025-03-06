@@ -1,32 +1,41 @@
 {% extends 'admin/base_layout.html' %} {% block title %}
 <title>
-  {% if type == 'edit' %}
-      Edit Product
-    {% elif type == 'delete' %}
-      Delete Product
-    {% else %}
-      Create Product
-    {% endif %}
+  {% if type == 'edit' %} Edit Product {% elif type == 'delete' %} Delete
+  Product {% else %} Create Product {% endif %}
 </title>
-{% endblock %} {% block body %}
-<form method="post" enctype="multipart/form-data" class="w-50">
-  {% csrf_token %}
-  {% if type == 'delete' %}
-      <p>Are you sure you want to delete Product <span class="text-danger">{{product.title}}</span>?</p>
-      <div class="d-flex justify-content-between gap-4 align-items-center">
-        <a href="{% url 'admin_products' %}" class="btn btn-secondary p-2 w-100">Cancel</a>
-        <button type="submit" class="text-white p-2 w-100">Delete</button>
-      </div>
-    {% else %}
-    <h4 class="h4">
-      {% if type == 'edit' %}
-        Edit Product
-      {% else %}
-        Create Product
+{% endblock %} 
+{% block body %}
+<div class="container">
+  <div class="row">
+    <div class="col-md-8">
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %} 
+        {% if type == 'delete' %}
+          <p>
+            Are you sure you want to delete Product
+            <span class="text-danger">{{product.title}}</span>?
+          </p>
+          <div class="d-flex justify-content-between gap-4 align-items-center">
+            <a
+              href="{% url 'admin_products' %}"
+              class="btn btn-secondary p-2 w-100"
+              >Cancel</a
+            >
+            <button type="submit" class="text-white p-2 w-100">Delete</button>
+          </div>
+        {% else %}
+          <h4 class="h4">
+            {% if type == 'edit' %} 
+              Edit Product
+            {% else %} 
+              Create Product 
+            {% endif %}
+          </h4>
+          {{form.as_p }}
+          <button type="submit" class="text-white p-2 w-100">Submit</button>
       {% endif %}
-    </h4>
-    {{form.as_p }}
-    <button type="submit" class="text-white p-2 w-100">Submit</button>
-  {% endif %}
-</form>
+      </form>
+    </div>
+  </div>
+</div>
 {% endblock %}

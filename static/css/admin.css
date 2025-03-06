@@ -84,3 +84,39 @@ body {
     height: 50px;
     object-fit: cover;
 }
+
+#menu-toggle{
+    display: none;
+}
+
+@media screen and (max-width: 768px) {
+    #menu-toggle{
+        display: flex;
+    }
+
+    .sidebar {
+        width: 70%;
+        position: fixed;
+        z-index: 999;
+        top: 0;
+        left: 0;
+        height: 100%;
+        overflow-x: hidden;
+        background-color: white;
+        transition: 0.5s;
+        display: none;
+    }
+
+    .sidebar-show{
+        display: block;
+    }
+
+    .main-content {
+        margin-left: 0;
+    }
+
+    .topbar {
+        left: 0;
+    }
+    
+}
