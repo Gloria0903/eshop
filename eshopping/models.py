@@ -39,6 +39,7 @@ class Customer(AbstractUser, PermissionsMixin):
     phone = models.CharField(max_length=10)
     email = models.EmailField(unique=True)
     username = None
+    profile_pic = models.ImageField(upload_to='profiles', default='profiles/default.png')
 
     objects = CustomerManager()
     USERNAME_FIELD = 'email'

@@ -10,6 +10,10 @@ a, li, p, h1, h2, h3, h4, h5, h6{
     color: var(--text-color);
 }
 
+a {
+    text-decoration: none;
+}
+
 button {
     background-color: var(--primary-color);
     color: var(--dark-text-color);

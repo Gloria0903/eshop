@@ -1,0 +1,35 @@
+{% extends 'base.html' %} 
+{% block title %}
+<title>My Orders</title>
+{% endblock %} 
+{% block body %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center my-2">
+        <h4 class="h4">
+            My Orders
+        </h4>
+    </div>
+    <div class="row">
+        {% for order in customer_orders %}
+        <div class="col-md-4 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Order ID: {{ order.id }}</h5>
+                    <p class="card-text">Date: {{ order.date }}</p>
+                    <p class="card-text">Total Amount: KES {{ order.totalAmount }}</p>
+                    <p class="card-text">
+                        Status: 
+                        {% if order.isPaid %}
+                        <span class="badge bg-success text-white">Paid</span>
+                        {% else %}
+                        <span class="badge bg-danger text-white">Not Paid</span>
+                        {% endif %}
+                    </p>
+                    <a href="{% url 'customer_order_details' order.id %}" class="btn btn-primary text-white">View Details</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -65,10 +65,16 @@
          </button>
         <h5>Dashboard</h5>
         <div>
-          <span>Admin</span>
+          {% if request.user.first_name %}
+            <a href="{% url 'profile' %}">Hi, {{request.user.first_name}}</a>
+          {% else %}
+            <a href="{% url 'profile' %}">Hi, Admin</a>
+          {% endif %}
+          <a href="{% url 'logout' %}" class="text-danger">Logout</a>
           <img
-            src="https://via.placeholder.com/40"
-            class="rounded-circle ms-2"
+            src="{{ request.user.profile_pic.url }}"
+            class="rounded-circle ms-2 border object-fit-cover"
+            style="width: 30px"
             alt="Profile" />
         </div>
       </div>

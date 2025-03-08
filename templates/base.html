@@ -85,13 +85,8 @@
                 </form>
             </div>
             <div class="col-lg-3 col-6 text-right">
-                <a href="" class="btn border">
-                    <i class="fas fa-heart text-primary"></i>
-                    <span class="badge">0</span>
-                </a>
-                <a href="" class="btn border">
+                <a href="{% url 'customer_orders' %}" class="btn border">
                     <i class="fas fa-shopping-cart text-primary"></i>
-                    <span class="badge">0</span>
                 </a>
             </div>
         </div>
@@ -132,6 +127,7 @@
                             <a href="{% url 'index' %}" class="nav-item nav-link ">Home</a>
                             <a href="{% url 'shop' %}" class="nav-item nav-link ">Shop</a>
                             <a href="{% url 'cart_view' %}" class="nav-item nav-link ">Shopping Cart</a>
+                            <a href="{% url 'customer_orders' %}" class="nav-item nav-link ">My Orders</a>
                             <a href="{% url 'contact' %}" class="nav-item nav-link">Contact</a>
                         </div>
                         <div class="navbar-nav ml-auto py-0">
@@ -139,7 +135,7 @@
                                 {% if request.user.is_superuser %}
                                      <a href="{% url 'admin_dashboard' %}" class="nav-item nav-link">Admin Dashboard</a>
                                 {% endif %}
-                            <h6 class="h6 nav-item nav-link my-auto">Hi, {{request.user.first_name}}</h6>
+                            <a href="{% url 'profile' %}" class="nav-item nav-link my-auto">Hi, {{request.user.first_name}}</a>
                             <a href="{% url 'logout' %}" class="nav-item nav-link">Logout</a>
                             {% else %}
                             <a href="{% url 'customerlogin' %}" class="nav-item nav-link">Login</a>

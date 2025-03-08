@@ -1,5 +1,5 @@
 '''views.py file'''
-from .forms import ProductForm, CategoryForm, SizeForm, ColorForm, CustomerRegistrationForm
+from .forms import ProductForm, CategoryForm, SizeForm, ColorForm, CustomerRegistrationForm, ProfileForm
 from .models import Product, Category, Size, Color, Payment, OrderItem, Cart, ProductSizeColor, Customer, Category, Order
 from django.contrib import messages
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
@@ -83,6 +83,22 @@ class CustomerLogin(View):
             messages.error(request, error_message)
         return render(request, 'customerlogin.html', {'error': error_message})
 
+
+@login_required(login_url='customerlogin')
+def profile(request):
+    user = request.user
+    if request.method == 'POST':
+        profile_form = ProfileForm(request.POST, request.FILES, instance=user)
+        if profile_form.is_valid():
+            profile_form.save()
+            messages.success(request, 'Profile updated successfully')
+        return redirect('profile')
+    else:
+        profile_form = ProfileForm(instance=user)
+
+    return render(request, 'profile.html', {
+        'form': profile_form,
+    })
 
 # Logout
 def customer_logout(request):
@@ -410,6 +426,18 @@ def mpesa_callback(request, order_id):
             return Response({"message": "Your transaction could not be completed."}, status=400)
             # return render(request, 'confirm_payment.html', {"success": False, "description": resultCode, "order_id": order_id})
     return Response({'message': 'Method not allowed'}, status=405)
+
+@login_required(login_url='customerlogin')
+def get_customer_orders(request):
+    user = request.user
+    orders = Order.objects.filter(customer=user)
+    return render(request, 'customer_orders.html', {"customer_orders": orders})
+
+
+@login_required(login_url='customerlogin')
+def get_customer_order_details(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+    return render(request, 'customer_order_details.html', {'order': order})
 
 # admin
 @admin_required

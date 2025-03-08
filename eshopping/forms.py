@@ -15,6 +15,18 @@ class CustomerRegistrationForm(UserCreationForm):
         fields = ['first_name','last_name', 'email', 'password1', 'password2']
 
 
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Customer
+        fields = ['first_name', 'last_name', 'email', 'profile_pic']
+        widgets = {
+            'first_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'First Name'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Last Name'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email'}),
+            'profile_pic': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+        }
+
+
 class CategoryForm(forms.ModelForm):
     class Meta:
         model = Category
